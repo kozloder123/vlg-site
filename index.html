@@ -1,1136 +1,1610 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<title>VLG</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VLG — FTAP Script</title>
+<link rel="icon" type="image/png" href="vlg.png" />
+<link rel="apple-touch-icon" href="vlg.png" />
+<meta name="description" content="Strong FTAP script with rich functionality. Official website and community." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    min-height: 100vh;
-    background: #0a0408;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #fff;
-    overflow-x: hidden;
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --pink-100:#ffe4ef;--pink-200:#ffc7de;--pink-300:#ff9fc4;
+    --pink-400:#ff6fa8;--pink-500:#ff3f8e;--pink-600:#e60077;
+    --pink-700:#b80060;--pink-800:#8a0049;--pink-900:#5c0030;
+    --pink-950:#2b0018;
+    --bg:#0a0507;--bg2:#120810;
+    --text:#f5e6ee;--muted:#a888a0;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    background:radial-gradient(circle at 50% 0%, #1a0711 0%, #0a0508 40%, #050304 100%);
+    color:var(--text);
+    font-family:'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x:hidden;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .ambient-grid{
+    position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:
+      linear-gradient(90deg, rgba(255,105,180,0.03) 1px, transparent 1px),
+      linear-gradient(rgba(255,105,180,0.03) 1px, transparent 1px);
+    background-size:44px 44px;
+  }
+  .ambient-glow-red{
+    position:fixed;top:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:900px;height:450px;
+    pointer-events:none;z-index:-1;
+    background:radial-gradient(70% 50% at 50% 25%, rgba(255,63,142,0.18), rgba(230,0,119,0.06) 45%, transparent 75%);
+  }
+  .ambient-glow-bottom{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:900px;height:450px;
+    pointer-events:none;z-index:-1;
+    background:radial-gradient(75% 55% at 50% 85%, rgba(200,15,100,0.16), rgba(140,10,70,0.04) 50%, transparent 80%);
   }
 
-  /* ============ ЭКРАН ПРОВЕРКИ ============ */
-  #checkScreen {
-    position: fixed;
-    inset: 0;
-    background: #0a0408;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: opacity 0.5s ease;
+  /* ==== CHECK SCREEN ==== */
+  #checkScreen{
+    position:fixed;inset:0;z-index:1000;
+    display:flex;align-items:center;justify-content:center;
+    background:#070305;padding:16px;
+    transition:opacity 0.6s ease;
+    font-family:'Plus Jakarta Sans', sans-serif;
   }
-  #checkScreen.fade-out { opacity: 0; pointer-events: none; }
+  #checkScreen.fade-out{opacity:0;pointer-events:none}
+  .check-glow{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:600px;height:450px;pointer-events:none;z-index:-1;
+    background:radial-gradient(ellipse 65% 55% at 50% 50%, rgba(255,63,142,0.18) 0%, rgba(230,0,119,0.05) 50%, transparent 80%);
+  }
+  .check-card{
+    width:100%;max-width:430px;
+    background:rgba(20,9,15,0.95);
+    border:1px solid rgba(255,105,180,0.35);
+    border-radius:26px;padding:32px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.9), 0 0 35px rgba(255,63,142,0.18);
+    backdrop-filter:blur(20px);
+    position:relative;
+  }
+  .check-card::before{
+    content:'';position:absolute;top:0;left:32px;right:32px;height:1.5px;
+    background:linear-gradient(90deg,transparent,rgba(255,105,180,0.7),transparent);
+  }
+  .check-header{text-align:center;margin-bottom:28px}
+  .check-logo{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:64px;height:64px;border-radius:18px;
+    background:linear-gradient(135deg,#e60077,#5c0030);
+    padding:2px;margin-bottom:16px;position:relative;
+    box-shadow:0 0 25px rgba(255,63,142,0.4);
+  }
+  .check-logo img{width:100%;height:100%;object-fit:cover;border-radius:15px;background:#0b0c10}
+  .check-logo-badge{
+    position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;
+    border-radius:50%;background:#2b0018;border:1px solid #ff6fa8;
+    display:flex;align-items:center;justify-content:center;
+    color:#ff6fa8;font-size:12px;
+  }
+  .check-title{
+    font-family:'Cinzel',serif;
+    font-weight:900;font-size:26px;letter-spacing:2px;
+    background:linear-gradient(180deg,#ff9fc4,#ff3f8e 60%,#b80060);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    text-shadow:0 0 20px rgba(255,63,142,0.5);
+    margin-bottom:6px;
+  }
+  .check-sub{color:#a888a0;font-size:13px}
 
-  .check-card {
-    width: 460px;
-    background: #120610;
-    border-radius: 18px;
-    padding: 34px 30px;
-    border: 1px solid rgba(255, 60, 160, 0.35);
-    box-shadow: 0 0 60px rgba(255, 60, 160, 0.25), inset 0 0 40px rgba(255, 60, 160, 0.05);
-    text-align: center;
-    position: relative;
+  .check-box{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 20px;border-radius:16px;
+    background:#14101a;border:1px solid rgba(255,105,180,0.3);
+    cursor:pointer;transition:all 0.3s;
   }
-  .check-card::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: 18px;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(255, 60, 160, 0.6), transparent 40%, transparent 60%, rgba(255, 60, 160, 0.6));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    pointer-events: none;
+  .check-box:hover{border-color:rgba(255,63,142,0.6);background:#181420}
+  .check-box.loading{background:rgba(255,63,142,0.08);border-color:rgba(255,63,142,0.6)}
+  .check-box.done{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.5)}
+  .check-left{display:flex;align-items:center;gap:16px}
+  .check-circle{
+    width:28px;height:28px;border-radius:8px;
+    border:2px solid #5c3040;background:#1a0e16;
+    display:flex;align-items:center;justify-content:center;
+    transition:all 0.3s;
+  }
+  .check-box.loading .check-circle{border-color:transparent}
+  .check-box.done .check-circle{background:#10b981;border-color:#10b981;box-shadow:0 0 12px #10b981}
+  .check-circle .spinner{
+    width:14px;height:14px;border-radius:50%;
+    border:2px solid rgba(255,63,142,0.3);
+    border-top-color:#ff6fa8;
+    animation:spin 0.7s linear infinite;
+    display:none;
+  }
+  .check-box.loading .spinner{display:block}
+  .check-box.done .spinner{display:none}
+  .check-check{display:none;color:#fff}
+  .check-box.done .check-check{display:block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .check-text{font-size:15px;font-weight:600;color:#f5e6ee}
+  .check-guard{
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding-left:14px;border-left:1px solid rgba(255,105,180,0.15);
+    font-family:'Cinzel',serif;font-size:9px;color:#a888a0;letter-spacing:1.5px;
+  }
+  .check-guard .shield{color:#ff6fa8;font-size:18px;line-height:1}
+
+  .check-progress{overflow:hidden;max-height:0;transition:max-height 0.3s ease}
+  .check-progress.show{max-height:100px;margin-top:16px}
+  .check-progress-bar{
+    height:6px;background:#1a0e16;border-radius:4px;overflow:hidden;
+    border:1px solid rgba(255,63,142,0.2);
+  }
+  .check-progress-fill{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,#e60077,#ff9fc4);
+    box-shadow:0 0 10px #ff3f8e;
+    transition:width 0.2s ease;
+  }
+  .check-progress-label{
+    display:flex;justify-content:space-between;
+    margin-top:6px;font-size:11px;font-family:'Courier New',monospace;color:#a888a0;
+  }
+  .check-progress-label .pct{color:#ff6fa8;font-weight:700}
+
+  .check-footer{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:22px;padding-top:14px;border-top:1px solid rgba(255,105,180,0.15);
+    font-size:10.5px;font-family:'Courier New',monospace;color:#a888a0;
+  }
+  .check-footer .ray{display:flex;align-items:center;gap:6px}
+  .check-footer .dot{
+    width:6px;height:6px;border-radius:50%;background:#ff3f8e;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{50%{opacity:0.4}}
+
+  /* ==== NAVBAR ==== */
+  .navbar{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:18px 0;
+    transition:all 0.3s;
+    background:transparent;
+  }
+  .navbar.scrolled{
+    background:rgba(10,5,7,0.9);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,63,142,0.15);
+    padding:12px 0;
+    box-shadow:0 10px 30px rgba(0,0,0,0.8);
+  }
+  .navbar-inner{
+    max-width:1280px;margin:0 auto;padding:0 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .nav-brand{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+  .nav-logo{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,#ff3f8e,#5c0030);
+    padding:2px;
+    box-shadow:0 0 18px rgba(255,63,142,0.5);
+    overflow:hidden;flex-shrink:0;
+    transition:all 0.3s;
+  }
+  .nav-logo:hover{box-shadow:0 0 26px rgba(255,63,142,0.85)}
+  .nav-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .nav-name{
+    font-family:'Cinzel',serif;font-weight:900;font-size:18px;
+    letter-spacing:2px;color:#f5e6ee;min-width:70px;
+    text-shadow:0 0 12px rgba(255,63,142,0.5);
+  }
+  .nav-cursor{
+    display:inline-block;width:2px;height:16px;
+    background:rgba(255,159,196,0.9);margin-left:2px;
+    animation:pulse 1s ease-in-out infinite;
+    vertical-align:middle;
+  }
+  .nav-links{display:flex;gap:14px;align-items:center}
+  .snake-btn{
+    background:rgba(255,255,255,0.03);
+    border-radius:9999px;padding:2px;
+    position:relative;overflow:hidden;display:inline-flex;
+    transition:all 0.25s;
+  }
+  .snake-btn::before{
+    content:'';position:absolute;inset:-120%;
+    background:conic-gradient(transparent 0deg 160deg, rgba(255,0,120,0.05) 220deg, rgba(255,63,142,0.4) 280deg, rgba(255,63,142,0.85) 330deg, #ff3f8e 355deg, #fff 360deg);
+    animation:snakeRotate 3.2s linear infinite;
+  }
+  @keyframes snakeRotate{to{transform:rotate(360deg)}}
+  .snake-btn:hover{box-shadow:0 0 18px rgba(255,63,142,0.4)}
+  .snake-inner{
+    position:relative;z-index:1;
+    background:#0d0a12;border-radius:9999px;
+    padding:8px 20px;
+    font-weight:600;font-size:13.5px;color:#f5e6ee;
+    transition:background 0.2s;cursor:pointer;
+  }
+  .snake-inner:hover{background:#1a1220}
+  .nav-right{display:flex;gap:12px;align-items:center}
+  .lang-btn{
+    display:flex;align-items:center;gap:6px;
+    padding:7px 14px;border-radius:9999px;
+    background:rgba(20,15,26,0.8);border:1px solid rgba(120,100,140,0.4);
+    color:#d0b8c8;font-size:12px;font-weight:600;cursor:pointer;
+    transition:all 0.2s;
+  }
+  .lang-btn:hover{border-color:rgba(255,63,142,0.5);color:#fff}
+  .cta-btn{
+    padding:9px 22px;border-radius:9999px;
+    background:linear-gradient(115deg,#b80060,#e60077 28%,#ff6fa8,#e60077 68%,#8a0049);
+    background-size:260% 100%;
+    color:#fff;font-weight:700;font-size:13.5px;
+    cursor:pointer;border:none;
+    box-shadow:0 0 20px rgba(255,63,142,0.5);
+    animation:crimsonFlow 3.5s ease-in-out infinite;
+    transition:all 0.2s;
+  }
+  .cta-btn:hover{box-shadow:0 0 32px rgba(255,63,142,0.8)}
+  @keyframes crimsonFlow{
+    0%{background-position:100% 0}
+    50%{background-position:0 0}
+    100%{background-position:-100% 0}
+  }
+  .nav-mobile-menu{
+    display:none;flex-direction:column;
+    background:rgba(12,10,16,0.97);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,63,142,0.3);
+    padding:20px 24px;gap:14px;
+    max-height:0;overflow:hidden;
+    transition:max-height 0.3s;
+  }
+  .nav-mobile-menu.open{max-height:400px}
+  .nav-mobile-menu a{
+    display:flex;align-items:center;gap:10px;
+    color:#d0b8c8;text-decoration:none;
+    font-weight:600;font-size:15px;
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,63,142,0.08);
+  }
+  .nav-mobile-menu a:hover{color:#ff9fc4}
+  .menu-toggle{
+    display:none;padding:8px;
+    background:rgba(20,15,26,0.8);border:1px solid rgba(255,63,142,0.3);
+    border-radius:12px;color:#d0b8c8;cursor:pointer;
+    font-size:20px;line-height:1;
   }
 
-  .check-logo {
-    width: 76px;
-    height: 76px;
-    margin: 0 auto 20px;
-    background: #1a0812;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 24px rgba(255, 60, 160, 0.6), inset 0 0 16px rgba(255, 60, 160, 0.4);
-    position: relative;
-    border: 1px solid rgba(255, 60, 160, 0.5);
+  /* ==== HERO ==== */
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:120px 20px 80px;
+    text-align:center;
+    overflow:hidden;
   }
-  .check-logo svg { width: 44px; height: 44px; }
-  .lock-badge {
-    position: absolute;
-    bottom: -6px;
-    right: -6px;
-    width: 26px;
-    height: 26px;
-    background: #1a0812;
-    border: 1.5px solid rgba(255, 60, 160, 0.6);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .hero-bg{
+    position:absolute;inset:0;z-index:-2;overflow:hidden;
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.4) 78%, rgba(0,0,0,0.1) 90%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.4) 78%, rgba(0,0,0,0.1) 90%, rgba(0,0,0,0) 100%);
   }
-  .lock-badge svg { width: 13px; height: 13px; }
-
-  .check-title {
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    background: linear-gradient(180deg, #ff4d9d, #b0146c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 12px;
+  .hero-bg img{
+    width:100%;height:100%;object-fit:cover;object-position:center 35%;
+    filter:brightness(0.5) contrast(1.1) saturate(1.15);
+    opacity:0.55;
   }
-
-  .check-sub { color: #c0a0b0; font-size: 14px; margin-bottom: 26px; }
-
-  .check-box {
-    background: #0d0409;
-    border: 1px solid #2a1420;
-    border-radius: 12px;
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    text-align: left;
-  }
-  .check-box:hover { border-color: rgba(255, 60, 160, 0.4); }
-  .check-box.loading { cursor: wait; border-color: rgba(255, 60, 160, 0.6); background: #15070e; }
-  .check-box.done { border-color: rgba(80, 255, 120, 0.5); background: #0a150d; }
-
-  .checkbox {
-    width: 28px; height: 28px;
-    border: 2px solid #3a2030;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    position: relative;
-  }
-  .check-box:hover .checkbox { border-color: rgba(255, 60, 160, 0.6); }
-  .check-box.done .checkbox { border-color: #50ff78; }
-  .check-box.done .checkbox svg { display: block; }
-  .checkbox svg { display: none; }
-
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255, 60, 160, 0.2);
-    border-top-color: #ff3ca0;
-    border-radius: 50%;
-    display: none;
-    animation: spin 0.7s linear infinite;
-    position: absolute;
-  }
-  .check-box.loading .checkbox { border-color: transparent; }
-  .check-box.loading .spinner { display: block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .check-text { font-size: 15px; font-weight: 700; color: #fff; flex: 1; }
-
-  .guard {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #a08090;
-    font-size: 10px;
-    text-align: right;
-    line-height: 1.2;
-  }
-  .guard svg { width: 20px; height: 20px; }
-
-  .progress-wrap { display: none; margin-top: 22px; text-align: left; }
-  .progress-wrap.visible { display: block; }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: #8a6070;
-    margin-bottom: 6px;
-    letter-spacing: 0.5px;
-  }
-  .progress-bar { height: 3px; background: #1a0a14; border-radius: 2px; overflow: hidden; }
-  .progress-fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, #b0146c, #ff4d9d);
-    box-shadow: 0 0 10px rgba(255, 60, 160, 0.8);
-    transition: width 0.3s ease;
-  }
-  .progress-pct { color: #ff4d9d; font-weight: 700; }
-
-  .check-footer {
-    margin-top: 22px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: #6a4050;
-    border-top: 1px solid #1e0a14;
-    padding-top: 14px;
-  }
-  .check-footer .ray-id { color: #8a6070; }
-  .dot-red {
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: #ff3ca0;
-    border-radius: 50%;
-    margin-right: 6px;
-    box-shadow: 0 0 6px #ff3ca0;
-    vertical-align: middle;
-  }
-
-  /* ============ ГЛАВНАЯ ============ */
-  #siteScreen {
-    display: none;
-    min-height: 100vh;
-    position: relative;
-  }
-  #siteScreen.visible { display: block; }
-
-  .site-bg {
-    position: fixed;
-    inset: 0;
-    background-image: url('https://i.pinimg.com/originals/0e/37/57/0e3757fa06ed734aec4cf1230ac831a2.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    z-index: -1;
-    filter: brightness(0.55) saturate(1.1);
-  }
-  .site-bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+  .hero-bg::after{
+    content:'';position:absolute;inset:0;
     background:
-      radial-gradient(circle at 20% 30%, rgba(255, 40, 130, 0.35), transparent 50%),
-      radial-gradient(circle at 80% 60%, rgba(255, 40, 130, 0.2), transparent 55%),
-      linear-gradient(180deg, rgba(10, 0, 8, 0.35) 0%, rgba(10, 0, 8, 0.9) 100%);
+      radial-gradient(ellipse 75% 65% at 50% 45%, rgba(255,63,142,0.14) 0%, transparent 75%),
+      linear-gradient(180deg, rgba(10,5,7,0.5) 0%, rgba(10,5,7,0.85) 70%, rgba(10,5,7,1) 100%);
   }
-
-  /* navbar */
-  .navbar {
-    display: flex;
-    align-items: center;
-    padding: 18px 40px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10, 4, 8, 0.75);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 60, 160, 0.15);
+  .hero-content{position:relative;z-index:2;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:24px}
+  .hero-title{
+    font-family:'Cinzel',serif;font-weight:900;
+    font-size:clamp(72px, 14vw, 180px);
+    letter-spacing:6px;line-height:0.9;
+    background:linear-gradient(180deg,#ffc7de 0%,#ff6fa8 40%,#e60077 70%,#8a0049 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    animation:neonPinkPulse 2.6s ease-in-out infinite;
   }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 800;
-    font-size: 18px;
-    color: #fff;
-    margin-right: 60px;
-  }
-  .nav-logo-icon {
-    width: 42px; height: 42px;
-    background: #1a0812;
-    border: 2px solid #ff3ca0;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 18px rgba(255, 60, 160, 0.6);
-  }
-  .nav-logo-icon svg { width: 22px; height: 22px; }
-  .nav-logo-text {
-    border-right: 2px solid #ff3ca0;
-    padding-right: 14px;
-    letter-spacing: 0.5px;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .nav-link {
-    padding: 8px 20px;
-    border-radius: 8px;
-    background: rgba(20, 5, 15, 0.6);
-    border: 1px solid rgba(255, 60, 160, 0.25);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-  }
-  .nav-link:hover {
-    border-color: rgba(255, 60, 160, 0.7);
-    box-shadow: 0 0 14px rgba(255, 60, 160, 0.4);
-  }
-
-  .nav-right { display: flex; gap: 12px; align-items: center; }
-  .lang-btn {
-    padding: 8px 14px;
-    border-radius: 8px;
-    background: rgba(20, 5, 15, 0.6);
-    border: 1px solid rgba(255, 60, 160, 0.3);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .lang-btn::before { content: '🌐'; font-size: 13px; }
-  .nav-cta {
-    padding: 10px 22px;
-    border-radius: 10px;
-    background: linear-gradient(180deg, #ff4d9d, #c2186e);
-    border: none;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(255, 60, 160, 0.5);
-    transition: all 0.2s;
-  }
-  .nav-cta:hover {
-    box-shadow: 0 0 30px rgba(255, 60, 160, 0.8);
-    transform: translateY(-1px);
-  }
-
-  /* секции */
-  section { padding: 80px 40px; position: relative; z-index: 5; }
-
-  .section-title {
-    font-size: 34px;
-    font-weight: 900;
-    text-align: center;
-    margin-bottom: 12px;
-    letter-spacing: -0.5px;
-  }
-  .section-sub {
-    text-align: center;
-    font-size: 14px;
-    color: #a888a0;
-    letter-spacing: 3px;
-    margin-bottom: 50px;
-    text-transform: uppercase;
-  }
-  .section-sub::before {
-    content: '';
-    display: inline-block;
-    width: 30px;
-    height: 1px;
-    background: #ff3ca0;
-    vertical-align: middle;
-    margin-right: 14px;
-    box-shadow: 0 0 8px #ff3ca0;
-  }
-  .section-sub::after {
-    content: '';
-    display: inline-block;
-    width: 30px;
-    height: 1px;
-    background: #ff3ca0;
-    vertical-align: middle;
-    margin-left: 14px;
-    box-shadow: 0 0 8px #ff3ca0;
-  }
-
-  /* HERO */
-  .hero {
-    min-height: calc(100vh - 80px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 20px 60px;
-    text-align: center;
-  }
-
-  .hero-title {
-    font-size: clamp(80px, 15vw, 200px);
-    font-weight: 900;
-    letter-spacing: -4px;
-    line-height: 0.9;
-    background: linear-gradient(180deg, #ff8fca 0%, #ff3ca0 50%, #b0146c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 30px;
-    animation: neonPulse 2.5s ease-in-out infinite;
-  }
-  @keyframes neonPulse {
-    0%, 100% {
-      filter: drop-shadow(0 0 20px rgba(255, 60, 160, 0.7))
-              drop-shadow(0 0 40px rgba(255, 60, 160, 0.4));
+  @keyframes neonPinkPulse{
+    0%,100%{
+      filter:drop-shadow(0 0 20px rgba(255,63,142,0.7))
+             drop-shadow(0 0 45px rgba(255,63,142,0.4));
     }
-    50% {
-      filter: drop-shadow(0 0 40px rgba(255, 60, 160, 1))
-              drop-shadow(0 0 80px rgba(255, 60, 160, 0.7))
-              drop-shadow(0 0 120px rgba(255, 60, 160, 0.4));
+    50%{
+      filter:drop-shadow(0 0 40px rgba(255,63,142,1))
+             drop-shadow(0 0 85px rgba(255,63,142,0.7))
+             drop-shadow(0 0 130px rgba(255,63,142,0.4));
     }
   }
-
-  .hero-sub {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 3px;
-    color: #fff;
-    margin-bottom: 26px;
-    text-shadow: 0 0 20px rgba(255, 60, 160, 0.5);
+  .hero-sub{
+    font-family:'Rajdhani',sans-serif;font-weight:600;
+    font-size:clamp(14px,1.6vw,20px);letter-spacing:4px;
+    color:#f5e6ee;text-transform:uppercase;
+    text-shadow:0 0 18px rgba(255,63,142,0.55);
+  }
+  .hero-tag{
+    display:inline-flex;align-items:center;
+    padding:12px 22px;border-radius:8px;
+    background:rgba(255,255,255,0.02);
+    border:1px solid rgba(255,63,142,0.18);
+    font-family:'Courier New',monospace;
+    font-size:clamp(12px,1.4vw,15px);
+    color:#c0a8b8;letter-spacing:1px;
+    min-height:42px;
+  }
+  .hero-tag .type-cursor{
+    display:inline-block;width:8px;height:16px;margin-left:4px;
+    background:#a888a0;vertical-align:middle;
+    animation:pulse 1s ease-in-out infinite;
+  }
+  .hero-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:16px 40px;border-radius:9999px;
+    background:linear-gradient(115deg,#b80060,#e60077 28%,#ff6fa8,#e60077 68%,#8a0049);
+    background-size:260% 100%;
+    color:#fff;font-weight:700;font-size:15px;
+    border:none;cursor:pointer;
+    box-shadow:0 0 30px rgba(255,63,142,0.6), inset 0 0 12px rgba(255,255,255,0.25);
+    animation:crimsonFlow 3.5s ease-in-out infinite;
+    transition:all 0.3s;
+    text-decoration:none;
+  }
+  .hero-cta:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 45px rgba(255,63,142,0.9), inset 0 0 15px rgba(255,255,255,0.35);
+  }
+  .hero-cta svg{width:20px;height:20px}
+  .hero-command{
+    margin-top:14px;
+    font-family:'Orbitron',sans-serif;font-weight:800;
+    font-size:14px;letter-spacing:5px;
+    color:#ff6fa8;text-transform:uppercase;
+    text-shadow:0 0 22px rgba(255,63,142,0.7);
   }
 
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 12px 24px;
-    border-radius: 6px;
-    background: rgba(10, 4, 8, 0.65);
-    border: 1px solid rgba(255, 60, 160, 0.25);
-    font-family: 'Courier New', Consolas, monospace;
-    font-size: 15px;
-    color: #d0b8c5;
-    letter-spacing: 1px;
-    margin-bottom: 36px;
-    backdrop-filter: blur(4px);
-    min-height: 44px;
-    min-width: 400px;
+  /* ==== SECTIONS ==== */
+  .section{
+    position:relative;padding:90px 24px;
+    max-width:1200px;margin:0 auto;
   }
-  .hero-tag .cursor {
-    color: #ff5fae;
-    font-weight: 700;
-    animation: blink 1s steps(1) infinite;
-    margin-left: 2px;
+  .section-head{text-align:center;margin-bottom:60px}
+  .section-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 16px;border-radius:9999px;
+    background:rgba(43,0,24,0.7);
+    border:1px solid rgba(255,63,142,0.4);
+    color:#ff9fc4;font-size:11.5px;
+    font-weight:700;letter-spacing:3px;
+    text-transform:uppercase;margin-bottom:14px;
+    box-shadow:0 0 16px rgba(255,63,142,0.2);
   }
-  @keyframes blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
+  .section-title{
+    font-family:'Orbitron',sans-serif;
+    font-weight:900;font-size:clamp(24px,4vw,42px);
+    text-transform:uppercase;letter-spacing:2px;
+    color:#f5e6ee;
+    text-shadow:0 0 20px rgba(255,63,142,0.6);
   }
 
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 42px;
-    border-radius: 50px;
-    background: linear-gradient(180deg, #ff4d9d 0%, #c2186e 100%);
-    border: 1px solid rgba(255, 130, 180, 0.6);
-    color: #fff;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 0 40px rgba(255, 60, 160, 0.7), 0 8px 24px rgba(180, 20, 100, 0.4);
-    transition: all 0.25s;
-    text-decoration: none;
+  /* ==== CREATORS ==== */
+  .creators-wrap{
+    position:relative;
+    border-radius:28px;overflow:hidden;
+    border:1px solid rgba(255,63,142,0.35);
+    padding:40px;
+    box-shadow:0 0 35px rgba(255,63,142,0.15), 0 12px 40px rgba(0,0,0,0.9);
+    transition:border-color 0.3s;
   }
-  .hero-cta:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 60px rgba(255, 60, 160, 1), 0 12px 32px rgba(180, 20, 100, 0.6);
+  .creators-wrap:hover{border-color:rgba(255,63,142,0.7)}
+  .creators-bg{position:absolute;inset:0;z-index:0}
+  .creators-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.4) contrast(1.2);opacity:0.4}
+  .creators-bg::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(8,5,8,0.9), rgba(14,7,10,0.85), rgba(8,5,8,0.95));
   }
-  .hero-cta svg { width: 22px; height: 22px; }
+  .creators-content{position:relative;z-index:1}
+  .creators-head{text-align:center;margin-bottom:40px}
+  .creators-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:5px 14px;border-radius:9999px;
+    background:rgba(43,0,24,0.7);
+    border:1px solid rgba(255,63,142,0.4);
+    color:#ff9fc4;font-size:11px;font-weight:400;
+    letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;
+    font-family:'Rajdhani',sans-serif;
+  }
+  .creators-badge strong{font-weight:900;color:#ff6fa8}
+  .creators-title{
+    font-family:'Orbitron',sans-serif;font-weight:900;
+    font-size:clamp(20px,3vw,36px);text-transform:uppercase;
+    letter-spacing:2px;color:#f5e6ee;
+    text-shadow:0 0 22px rgba(255,63,142,0.6);
+  }
+  .creators-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  @media(max-width:768px){.creators-grid{grid-template-columns:1fr;gap:20px}}
 
-  .hero-command {
-    margin-top: 40px;
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: 4px;
-    color: #ff5fae;
-    text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(255, 60, 160, 0.6);
+  .creator-card{display:flex;flex-direction:column;align-items:center;width:100%}
+  .creator-role-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .creator-role-icon{
+    padding:4px;border-radius:6px;
+    background:rgba(92,0,48,0.6);border:1px solid rgba(255,63,142,0.4);
+    color:#ff6fa8;display:flex;font-size:14px;
+  }
+  .creator-role-title{
+    font-family:'Orbitron',sans-serif;font-weight:900;
+    font-size:16px;letter-spacing:2px;
+    text-transform:uppercase;color:#f5e6ee;
+    text-shadow:0 0 10px rgba(255,63,142,0.5);
+  }
+  .creator-island{
+    width:100%;border-radius:18px;padding:20px;
+    background:radial-gradient(circle at top, rgba(35,12,16,0.65), rgba(12,10,16,0.95) 70%);
+    border:1px solid rgba(255,63,142,0.4);
+    box-shadow:0 0 20px rgba(255,63,142,0.12), 0 10px 28px rgba(0,0,0,0.7);
+    transition:all 0.3s;position:relative;overflow:hidden;
+  }
+  .creator-island:hover{
+    border-color:rgba(255,63,142,0.75);
+    transform:translateY(-2px);
+    box-shadow:0 0 30px rgba(255,63,142,0.28), 0 12px 32px rgba(0,0,0,0.85);
+  }
+  .creator-island::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1.5px;
+    background:linear-gradient(90deg,transparent,rgba(255,63,142,0.8),transparent);
+  }
+  .creator-row{display:flex;gap:16px;align-items:flex-start}
+  .creator-avatar{
+    position:relative;flex-shrink:0;
+    width:56px;height:56px;border-radius:18px;
+    border:1px solid rgba(255,63,142,0.4);
+    background:#1a1220;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 15px rgba(255,63,142,0.15);
+  }
+  .creator-avatar img{width:100%;height:100%;object-fit:cover}
+  .creator-avatar .fallback{
+    font-family:'Orbitron',sans-serif;font-weight:900;
+    font-size:22px;color:#ff6fa8;
+    background:linear-gradient(135deg,#5c0030,#1a1220);
+    width:100%;height:100%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .creator-status-dot{
+    position:absolute;bottom:-2px;right:-2px;
+    width:15px;height:15px;border-radius:50%;
+    border:2px solid #121216;
+  }
+  .creator-status-dot.online{background:#10b981;box-shadow:0 0 8px #10b981}
+  .creator-status-dot.idle{background:#f59e0b;box-shadow:0 0 8px #f59e0b}
+  .creator-status-dot.dnd{background:#f43f5e;box-shadow:0 0 8px #f43f5e}
+  .creator-status-dot.offline{background:#71717a}
+  .creator-info{flex:1;min-width:0}
+  .creator-info-name{
+    display:flex;align-items:center;justify-content:space-between;gap:6px;
+  }
+  .creator-info-name h4{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:700;font-size:16px;color:#fff;
+    letter-spacing:-0.3px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;
+  }
+  .refresh-btn{
+    background:none;border:none;color:#a888a0;cursor:pointer;
+    padding:4px;font-size:14px;transition:color 0.2s;
+  }
+  .refresh-btn:hover{color:#ff6fa8}
+  .creator-info-tag{
+    font-family:'Courier New',monospace;
+    font-size:12px;color:#a888a0;margin-top:2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .creator-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .creator-badge-line{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:3px 10px;border-radius:9999px;
+    background:rgba(20,15,26,0.9);
+    border:1px solid #2a2030;
+    font-size:10.5px;font-weight:600;color:#d0b8c8;
+  }
+  .creator-badge-line .dot{width:6px;height:6px;border-radius:50%}
+  .creator-badge-mobile{
+    display:inline-flex;align-items:center;
+    padding:3px 8px;border-radius:9999px;
+    background:rgba(20,15,26,0.9);
+    border:1px solid #2a2030;
+    font-size:9.5px;color:#a888a0;
+  }
+  .creator-custom-status{
+    margin-top:12px;padding:8px 12px;
+    border-radius:10px;
+    background:rgba(20,15,26,0.6);
+    border:1px solid rgba(255,63,142,0.15);
+    font-size:11.5px;color:#d0b8c8;
+    font-style:italic;display:flex;align-items:center;gap:6px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .creator-custom-status .radio{
+    color:#ff6fa8;flex-shrink:0;animation:pulse 2s ease-in-out infinite;
+  }
+  .creator-activity{
+    margin-top:10px;padding:8px 12px;
+    border-radius:10px;
+    background:rgba(92,0,48,0.3);
+    border:1px solid rgba(255,63,142,0.2);
+    font-size:11.5px;color:#ff9fc4;
+    display:flex;align-items:center;gap:6px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .creator-profile-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:16px;padding:11px 16px;
+    border-radius:12px;
+    background:rgba(20,15,26,0.9);
+    border:1px solid rgba(255,63,142,0.3);
+    color:#d0b8c8;font-size:12px;font-weight:600;
+    text-decoration:none;cursor:pointer;
+    transition:all 0.2s;
+    box-shadow:0 0 10px rgba(255,63,142,0.08);
+  }
+  .creator-profile-btn:hover{
+    background:rgba(92,0,48,0.5);
+    border-color:rgba(255,63,142,0.7);
+    color:#fff;
+    box-shadow:0 0 20px rgba(255,63,142,0.3);
+  }
+  .creator-profile-btn svg{width:14px;height:14px;color:#ff6fa8}
+
+  /* ==== FAQ ==== */
+  .faq-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
+  }
+  @media(max-width:900px){.faq-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+  @media(max-width:600px){.faq-grid{grid-template-columns:1fr}}
+  .faq-card{
+    background:linear-gradient(180deg, rgba(19,7,9,0.95), rgba(13,7,10,0.9) 50%, rgba(8,7,10,0.95));
+    border:1px solid rgba(255,63,142,0.25);
+    border-radius:24px;padding:26px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    transition:all 0.3s;position:relative;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255,63,142,0.06);
+  }
+  .faq-card:hover{
+    border-color:rgba(255,63,142,0.7);
+    transform:translateY(-3px);
+    box-shadow:0 15px 40px rgba(0,0,0,0.9), 0 0 32px rgba(255,63,142,0.28);
+  }
+  .faq-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1.5px;
+    background:linear-gradient(90deg,transparent,rgba(255,63,142,0.5),transparent);
+    transition:all 0.5s;
+  }
+  .faq-card:hover::before{
+    background:linear-gradient(90deg,transparent,rgba(255,63,142,1),transparent);
+  }
+  .faq-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .faq-icon{
+    width:48px;height:48px;border-radius:16px;
+    background:rgba(92,0,48,0.5);
+    border:1px solid rgba(255,63,142,0.4);
+    display:flex;align-items:center;justify-content:center;
+    color:#ff6fa8;font-size:20px;
+    transition:all 0.3s;
+  }
+  .faq-card:hover .faq-icon{
+    background:rgba(138,0,73,0.5);
+    border-color:rgba(255,63,142,0.8);
+    box-shadow:0 0 18px rgba(255,63,142,0.45);
+    color:#ff9fc4;
+  }
+  .faq-num{
+    font-family:'Orbitron',sans-serif;font-weight:700;
+    font-size:11px;color:rgba(255,63,142,0.4);
+    letter-spacing:2px;transition:color 0.3s;
+  }
+  .faq-card:hover .faq-num{color:rgba(255,63,142,0.8)}
+  .faq-q{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:700;font-size:17px;
+    color:#fff;line-height:1.35;margin-bottom:12px;
+    transition:color 0.2s;
+  }
+  .faq-card:hover .faq-q{color:#ffe4ef}
+  .faq-divider{
+    height:1px;background:linear-gradient(90deg,rgba(255,63,142,0.3),rgba(255,63,142,0.1),transparent);
+    margin-bottom:14px;transition:all 0.3s;
+  }
+  .faq-card:hover .faq-divider{background:linear-gradient(90deg,rgba(255,63,142,0.5),rgba(255,63,142,0.15),transparent)}
+  .faq-a{font-size:13.5px;color:#c0a8b8;line-height:1.6}
+  .faq-by{
+    display:flex;align-items:center;gap:8px;
+    margin-top:18px;padding-top:12px;
+    font-size:10.5px;color:#a888a0;
+    font-weight:600;letter-spacing:0.5px;
+  }
+  .faq-by .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,63,142,0.5);
+    transition:all 0.3s;
+  }
+  .faq-card:hover .faq-by .dot{
+    background:#ff6fa8;
+    box-shadow:0 0 8px #ff3f8e;
+  }
+  .faq-card:hover .faq-by{color:rgba(255,63,142,0.8)}
+
+  /* ==== DISCORD CARD ==== */
+  .discord-wrap{max-width:520px;margin:0 auto}
+  .discord-card{
+    border-radius:28px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(20,8,11,0.95), rgba(14,7,10,0.95), rgba(8,7,9,0.98));
+    border:1px solid rgba(255,63,142,0.4);
+    box-shadow:0 15px 40px rgba(0,0,0,0.85), 0 0 30px rgba(255,63,142,0.12);
+    transition:all 0.3s;position:relative;
+  }
+  .discord-card:hover{
+    border-color:rgba(255,63,142,0.7);
+    box-shadow:0 20px 50px rgba(0,0,0,0.95), 0 0 40px rgba(255,63,142,0.25);
+  }
+  .discord-card::before{
+    content:'';position:absolute;top:0;left:32px;right:32px;height:1.5px;
+    background:linear-gradient(90deg,transparent,#ff3f8e,transparent);
+    box-shadow:0 0 10px #ff3f8e;z-index:20;
+  }
+  .discord-banner{height:150px;background:#000;position:relative;overflow:hidden}
+  .discord-banner img{width:100%;height:100%;object-fit:cover}
+  .discord-banner::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.2), transparent, rgba(20,8,11,0.95));
+  }
+  .discord-body{padding:0 26px 26px;position:relative}
+  .discord-head{display:flex;align-items:flex-end;justify-content:space-between;margin-top:-56px;margin-bottom:16px}
+  .discord-logo{
+    width:80px;height:80px;border-radius:22px;
+    background:#0c0c0e;padding:4px;
+    border:4px solid #14080b;
+    box-shadow:0 12px 32px rgba(0,0,0,0.9);
+    overflow:hidden;position:relative;
+  }
+  .discord-logo img{width:100%;height:100%;object-fit:cover;border-radius:16px;background:#000}
+  .discord-live{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 12px;border-radius:9999px;
+    background:rgba(26,42,36,0.7);
+    border:1px solid rgba(80,200,140,0.4);
+    color:#50ff96;font-size:11px;font-weight:600;
+  }
+  .discord-live .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#50ff96;box-shadow:0 0 8px #50ff96;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  .discord-title{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .discord-title h3{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:800;font-size:20px;color:#fff;letter-spacing:-0.3px;
+  }
+  .discord-verified{
+    width:16px;height:16px;border-radius:50%;
+    background:linear-gradient(135deg,#ff9fc4,#ff3f8e);
+    display:flex;align-items:center;justify-content:center;
+    font-size:9px;color:#1a0010;font-weight:900;
+  }
+  .discord-desc{
+    font-size:13.5px;color:#a888a0;
+    line-height:1.5;margin-bottom:14px;
+  }
+  .discord-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .discord-tag{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 10px;border-radius:8px;
+    background:#1e1824;border:1px solid #2a2030;
+    font-size:11px;color:#d0c0d8;
+  }
+  .discord-tag.pink{color:#ff9fc4;border-color:rgba(255,63,142,0.4)}
+  .discord-tag svg{width:12px;height:12px}
+  .discord-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:15px;border-radius:16px;
+    background:linear-gradient(115deg,#b80060,#e60077 28%,#ff6fa8,#e60077 68%,#8a0049);
+    background-size:260% 100%;
+    color:#fff;font-weight:700;font-size:14.5px;
+    text-decoration:none;cursor:pointer;border:none;
+    box-shadow:0 0 28px rgba(255,63,142,0.5);
+    animation:crimsonFlow 3.5s ease-in-out infinite;
+    transition:all 0.3s;
+  }
+  .discord-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 45px rgba(255,63,142,0.85);
+  }
+  .discord-btn svg{width:20px;height:20px}
+
+  /* ==== TARIFF ==== */
+  .tariff-wrap{max-width:440px;margin:0 auto}
+  .tariff-card{
+    border-radius:28px;padding:36px;
+    background:linear-gradient(180deg, rgba(20,8,11,0.95), rgba(14,7,10,0.95), rgba(8,7,9,0.98));
+    border:1px solid rgba(255,63,142,0.4);
+    box-shadow:0 20px 50px rgba(0,0,0,0.85), 0 0 35px rgba(255,63,142,0.14);
+    position:relative;overflow:hidden;
+    transition:all 0.5s;
+  }
+  .tariff-card:hover{
+    border-color:rgba(255,63,142,0.7);
+    box-shadow:0 25px 60px rgba(0,0,0,0.95), 0 0 45px rgba(255,63,142,0.28);
+  }
+  .tariff-card::before{
+    content:'';position:absolute;top:0;left:40px;right:40px;height:1.5px;
+    background:linear-gradient(90deg,transparent,#ff3f8e,transparent);
+    box-shadow:0 0 12px #ff3f8e;
+  }
+  .tariff-head{text-align:center;margin-bottom:24px}
+  .tariff-name{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:800;font-size:22px;color:#fff;
+    letter-spacing:-0.3px;margin-bottom:14px;
+  }
+  .tariff-price{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:900;font-size:48px;
+    color:#fff;letter-spacing:-1px;
+    margin-bottom:10px;
+    text-shadow:0 0 22px rgba(255,255,255,0.18);
+  }
+  .tariff-desc{font-size:13.5px;color:#a888a0}
+  .tariff-divider{
+    height:1px;margin:26px 0;
+    background:linear-gradient(90deg,transparent,rgba(255,63,142,0.3),transparent);
+  }
+  .tariff-features{
+    list-style:none;display:flex;flex-direction:column;gap:14px;
+    margin-bottom:28px;
+  }
+  .tariff-features li{
+    display:flex;align-items:center;gap:12px;
+    font-size:14px;color:#e0d0d8;
+  }
+  .tariff-features li .tick{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:20px;height:20px;border-radius:50%;
+    background:rgba(92,0,48,0.7);
+    border:1px solid rgba(255,63,142,0.5);
+    color:#ff6fa8;font-size:11px;font-weight:900;
+    flex-shrink:0;
+    box-shadow:0 0 10px rgba(255,63,142,0.3);
+  }
+  .tariff-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:16px;border-radius:16px;
+    background:linear-gradient(115deg,#b80060,#e60077 28%,#ff6fa8,#e60077 68%,#8a0049);
+    background-size:260% 100%;
+    color:#fff;font-weight:700;font-size:15px;
+    border:none;cursor:pointer;
+    box-shadow:0 0 30px rgba(255,63,142,0.6);
+    animation:crimsonFlow 3.5s ease-in-out infinite;
+    transition:all 0.3s;
+    text-decoration:none;
+  }
+  .tariff-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 45px rgba(255,63,142,0.9);
   }
 
-  /* создатели */
-  .creators {
-    display: flex;
-    gap: 24px;
-    max-width: 900px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-    justify-content: center;
+  /* ==== FOOTER ==== */
+  .footer{
+    position:relative;padding:40px 24px;
+    border-top:1px solid rgba(255,63,142,0.15);
+    text-align:center;
+    font-family:'Rajdhani',sans-serif;
+    font-size:12px;color:#a888a0;
+    letter-spacing:1.5px;
   }
-  .creator {
-    flex: 1;
-    min-width: 280px;
-    background: rgba(20, 6, 16, 0.7);
-    border: 1px solid rgba(255, 60, 160, 0.25);
-    border-radius: 16px;
-    padding: 26px;
-    backdrop-filter: blur(10px);
-    transition: all 0.25s;
+  .footer-inner{
+    display:flex;align-items:center;justify-content:center;
+    gap:10px;flex-wrap:wrap;
   }
-  .creator:hover {
-    border-color: rgba(255, 60, 160, 0.6);
-    box-shadow: 0 0 30px rgba(255, 60, 160, 0.25);
-  }
-  .creator-role {
-    font-size: 12px;
-    color: #ff5fae;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    font-weight: 700;
-  }
-  .creator-name {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-  .creator-tag {
-    font-size: 13px;
-    color: #a888a0;
-    margin-bottom: 18px;
-  }
-  .creator-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: rgba(80, 80, 80, 0.2);
-    border: 1px solid rgba(120, 120, 120, 0.3);
-    font-size: 12px;
-    color: #b0b0b0;
-  }
-  .creator-status::before {
-    content: '';
-    width: 7px;
-    height: 7px;
-    background: #888;
-    border-radius: 50%;
-  }
-  .creator-status.mobile::after {
-    content: '📱 Mobile';
-    margin-left: 6px;
-    color: #ff5fae;
-    font-size: 11px;
+  .footer strong{color:#d0b8c8}
+  .footer .sep{color:#ff3f8e}
+
+  /* ==== FLOWER CANVAS ==== */
+  #flowerCanvas{
+    position:fixed;inset:0;pointer-events:none;z-index:5;
+    width:100%;height:100%;
+    opacity:0.75;
   }
 
-  /* FAQ */
-  .faq-list {
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  /* ==== RESPONSIVE ==== */
+  @media(max-width:768px){
+    .nav-links{display:none}
+    .nav-right{display:none}
+    .menu-toggle{display:flex}
+    .navbar-inner{padding:0 16px}
+    .section{padding:60px 16px}
+    .creators-wrap{padding:26px 20px}
+    .creators-grid{gap:24px}
+    .faq-card{padding:22px}
+    .hero{padding:100px 16px 60px}
   }
-  .faq-item {
-    background: rgba(20, 6, 16, 0.7);
-    border: 1px solid rgba(255, 60, 160, 0.2);
-    border-radius: 12px;
-    padding: 22px 26px;
-    backdrop-filter: blur(10px);
-    transition: all 0.25s;
-  }
-  .faq-item:hover {
-    border-color: rgba(255, 60, 160, 0.5);
-    box-shadow: 0 0 24px rgba(255, 60, 160, 0.15);
-  }
-  .faq-num {
-    font-size: 13px;
-    color: #ff5fae;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-  .faq-q {
-    font-size: 17px;
-    font-weight: 800;
-    margin-bottom: 10px;
-  }
-  .faq-a {
-    font-size: 14px;
-    color: #c0a8b8;
-    line-height: 1.6;
-    margin-bottom: 12px;
-  }
-  .faq-by {
-    font-size: 11px;
-    color: #8a6070;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  /* discord card */
-  .discord-card {
-    max-width: 620px;
-    margin: 0 auto;
-    background: #15111a;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 105, 180, 0.35);
-    box-shadow: 0 0 40px rgba(255, 105, 180, 0.25);
-  }
-  .discord-banner {
-    height: 160px;
-    background-image: url('https://i.pinimg.com/originals/0e/37/57/0e3757fa06ed734aec4cf1230ac831a2.jpg');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-  }
-  .discord-banner::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255, 20, 100, 0.4) 0%, rgba(20, 0, 20, 0.85) 100%);
-    mix-blend-mode: multiply;
-  }
-  .discord-status {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: rgba(20, 40, 30, 0.9);
-    border: 1px solid rgba(80, 255, 150, 0.4);
-    color: #50ff96;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 2;
-  }
-  .discord-status::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: #50ff96;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #50ff96;
-  }
-  .discord-content { padding: 0 28px 28px; position: relative; }
-  .discord-avatar {
-    width: 88px; height: 88px;
-    border-radius: 22px;
-    background: #1a0a14;
-    border: 3px solid #0a0a0f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: -44px;
-    margin-bottom: 16px;
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6), inset 0 0 20px rgba(255, 105, 180, 0.3);
-  }
-  .discord-avatar span {
-    font-size: 20px;
-    font-weight: 900;
-    color: #ff69b4;
-    text-shadow: 0 0 12px rgba(255, 105, 180, 0.9);
-  }
-  .discord-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .discord-title h3 { font-size: 24px; font-weight: 800; }
-  .discord-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px; height: 22px;
-    background: #ff69b4;
-    border-radius: 50%;
-    font-size: 12px;
-    font-weight: 900;
-  }
-  .discord-desc {
-    color: #b8a8c0;
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 18px;
-  }
-  .discord-tags { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
-  .tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #1e1824;
-    border: 1px solid #2a2030;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 12px;
-    color: #d0c0d8;
-  }
-  .tag.pink { color: #ff69b4; border-color: rgba(255, 105, 180, 0.4); }
-
-  .discord-btn {
-    width: 100%;
-    background: linear-gradient(180deg, #ff4d9d 0%, #d9266f 100%);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    padding: 16px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 0 30px rgba(255, 77, 157, 0.5);
-    transition: all 0.2s;
-    text-decoration: none;
-  }
-  .discord-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(255, 77, 157, 0.8);
-  }
-
-  /* тариф */
-  .tariff {
-    max-width: 500px;
-    margin: 0 auto;
-    background: rgba(20, 6, 16, 0.75);
-    border: 1px solid rgba(255, 60, 160, 0.4);
-    border-radius: 20px;
-    padding: 34px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 40px rgba(255, 60, 160, 0.25);
-  }
-  .tariff-name {
-    font-size: 14px;
-    color: #ff5fae;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    font-weight: 700;
-  }
-  .tariff-price {
-    font-size: 42px;
-    font-weight: 900;
-    margin-bottom: 8px;
-    background: linear-gradient(180deg, #ff8fca, #ff3ca0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .tariff-price span {
-    font-size: 16px;
-    color: #a888a0;
-    -webkit-text-fill-color: #a888a0;
-    font-weight: 600;
-  }
-  .tariff-desc {
-    font-size: 14px;
-    color: #c0a8b8;
-    margin-bottom: 26px;
-    line-height: 1.5;
-  }
-  .tariff-features {
-    list-style: none;
-    margin-bottom: 26px;
-  }
-  .tariff-features li {
-    padding: 10px 0;
-    font-size: 14px;
-    color: #e0d0d8;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    border-bottom: 1px solid rgba(255, 60, 160, 0.1);
-  }
-  .tariff-features li::before {
-    content: '✓';
-    color: #ff5fae;
-    font-weight: 900;
-    text-shadow: 0 0 8px rgba(255, 60, 160, 0.7);
-    flex-shrink: 0;
-  }
-  .tariff-btn {
-    width: 100%;
-    background: linear-gradient(180deg, #ff4d9d 0%, #c2186e 100%);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255, 60, 160, 0.6);
-    transition: all 0.2s;
-  }
-  .tariff-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 45px rgba(255, 60, 160, 0.9);
-  }
-
-  /* footer */
-  footer {
-    padding: 40px;
-    text-align: center;
-    color: #6a4050;
-    font-size: 13px;
-    border-top: 1px solid rgba(255, 60, 160, 0.1);
-    position: relative;
-    z-index: 5;
-  }
-
-  /* лепестки */
-  .petal {
-    position: fixed;
-    pointer-events: none;
-    z-index: 1;
-    color: rgba(255, 60, 160, 0.5);
-    animation: fall linear infinite;
-  }
-  @keyframes fall {
-    0% { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-  }
-
-  @media (max-width: 720px) {
-    .navbar { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
-    .nav-logo { margin-right: 0; }
-    .nav-links { order: 3; width: 100%; justify-content: flex-start; }
-    section { padding: 60px 20px; }
-    .hero-title { font-size: 90px; }
-    .hero-tag { min-width: auto; font-size: 13px; padding: 10px 16px; }
+  @media(max-width:480px){
+    .hero-title{letter-spacing:4px}
+    .check-card{padding:24px 20px}
   }
 </style>
 </head>
 <body>
 
-<!-- ============ ПРОВЕРКА ============ -->
+<div class="ambient-grid"></div>
+<div class="ambient-glow-red"></div>
+<div class="ambient-glow-bottom"></div>
+<canvas id="flowerCanvas"></canvas>
+
+<!-- ========== CHECK SCREEN ========== -->
 <div id="checkScreen">
+  <div class="check-glow"></div>
   <div class="check-card">
-    <div class="check-logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#ff3ca0" stroke-width="2">
-        <circle cx="12" cy="12" r="8"/>
-        <path d="M4 12h16M12 4c2.5 3 2.5 13 0 16M12 4c-2.5 3-2.5 13 0 16"/>
-      </svg>
-      <div class="lock-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ff3ca0" stroke-width="2.5">
-          <rect x="5" y="11" width="14" height="10" rx="2"/>
-          <path d="M8 11V7a4 4 0 018 0v4"/>
-        </svg>
+    <div class="check-header">
+      <div class="check-logo">
+        <img src="vlg.png" alt="VLG" onerror="this.style.display='none';this.parentElement.querySelector('.fallback').style.display='flex'">
+        <div class="fallback" style="display:none;font-family:'Cinzel',serif;font-weight:900;font-size:22px;color:#ff9fc4;background:linear-gradient(135deg,#5c0030,#1a1220);width:100%;height:100%;border-radius:15px;align-items:center;justify-content:center">V</div>
+        <div class="check-logo-badge">🔒</div>
       </div>
+      <h2 class="check-title">VLG</h2>
+      <p class="check-sub" id="checkSub">Проверка безопасности перед входом на сайт</p>
     </div>
-    <div class="check-title">VLG</div>
-    <div class="check-sub">Проверка безопасности перед входом на сайт</div>
 
     <div class="check-box" id="checkBox">
-      <div class="checkbox">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#50ff78" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <div class="spinner"></div>
+      <div class="check-left">
+        <div class="check-circle">
+          <div class="spinner"></div>
+          <svg class="check-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <span class="check-text" id="checkText">Я человек (не робот)</span>
       </div>
-      <div class="check-text" id="checkText">Я человек (не робот)</div>
-      <div class="guard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ff3ca0" stroke-width="2">
-          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/>
-        </svg>
-        <div>GUARD</div>
+      <div class="check-guard">
+        <span class="shield">🛡</span>
+        <span>GUARD</span>
       </div>
     </div>
 
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-label">
-        <span id="progressLabel">Анализ браузера...</span>
-        <span class="progress-pct" id="progressPct">0%</span>
+    <div class="check-progress" id="checkProgress">
+      <div class="check-progress-bar">
+        <div class="check-progress-fill" id="checkProgressFill"></div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="check-progress-label">
+        <span id="checkProgressText">Анализ браузера...</span>
+        <span class="pct" id="checkProgressPct">0%</span>
+      </div>
     </div>
 
     <div class="check-footer">
-      <span class="ray-id"><span class="dot-red"></span>Ray ID: <span id="rayId">82AB0DBVZ0E7W0</span></span>
+      <div class="ray">
+        <span class="dot"></span>
+        <span>Ray ID: <span id="rayId">VLG</span></span>
+      </div>
       <span>VLG DDoS Shield</span>
     </div>
   </div>
 </div>
 
-<!-- ============ ГЛАВНАЯ ============ -->
-<div id="siteScreen">
-  <div class="site-bg"></div>
-
-  <nav class="navbar">
-    <div class="nav-logo">
-      <div class="nav-logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ff3ca0" stroke-width="2">
-          <circle cx="12" cy="12" r="8"/>
-          <path d="M4 12h16M12 4c2.5 3 2.5 13 0 16M12 4c-2.5 3-2.5 13 0 16"/>
-        </svg>
+<!-- ========== NAVBAR ========== -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <div class="nav-brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <div class="nav-logo">
+        <img src="vlg.png" alt="VLG" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#ff3f8e,#5c0030)'">
       </div>
-      <span class="nav-logo-text">VLG</span>
+      <div class="nav-name">
+        <span id="navTyped"></span><span class="nav-cursor"></span>
+      </div>
     </div>
     <div class="nav-links">
-      <a class="nav-link" href="#creators">Команда</a>
-      <a class="nav-link" href="#faq">FAQ</a>
-      <a class="nav-link" href="#discord">Дискорд</a>
-      <a class="nav-link" href="#tariff">Тариф</a>
+      <div class="snake-btn"><button class="snake-inner" onclick="scrollToSection('creators')">Команда</button></div>
+      <div class="snake-btn"><button class="snake-inner" onclick="scrollToSection('faq')">FAQ</button></div>
+      <div class="snake-btn"><button class="snake-inner" onclick="scrollToSection('discord')">Дискорд</button></div>
     </div>
     <div class="nav-right">
-      <button class="lang-btn">RU</button>
-      <a href="#tariff" class="nav-cta" style="text-decoration:none;">Получить доступ</a>
+      <button class="lang-btn" onclick="toggleLang()">
+        <span>🌐</span>
+        <span id="langLabel">RU</span>
+      </button>
+      <button class="cta-btn" onclick="scrollToSection('tariff')" id="navCtaBtn">Получить доступ</button>
     </div>
-  </nav>
+    <button class="menu-toggle" onclick="toggleMenu()" aria-label="menu">☰</button>
+  </div>
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a onclick="scrollToSection('creators')">👥 <span class="nav-m-creators">Команда</span></a>
+    <a onclick="scrollToSection('faq')">❓ <span class="nav-m-faq">FAQ</span></a>
+    <a onclick="scrollToSection('discord')">💬 <span class="nav-m-discord">Дискорд</span></a>
+    <button class="cta-btn" style="width:100%;margin-top:8px" onclick="scrollToSection('tariff')"><span class="nav-m-cta">Получить доступ</span></button>
+  </div>
+</nav>
 
-  <section class="hero">
-    <div class="hero-title">VLG</div>
-    <div class="hero-sub">STRONG FTAP SCRIPT WITH RICH FUNCTIONALITY</div>
+<!-- ========== HERO ========== -->
+<section class="hero" id="hero-section">
+  <div class="hero-bg">
+    <img src="vlg.png" alt="VLG" onerror="this.style.display='none'">
+  </div>
+  <div class="hero-content">
+    <h1 class="hero-title">VLG</h1>
+    <p class="hero-sub">Strong FTAP script with rich functionality</p>
     <div class="hero-tag">
-      <span id="typedText"></span><span class="cursor" id="typeCursor">▌</span>
+      <span id="heroTyped"></span><span class="type-cursor"></span>
     </div>
-    <a href="#tariff" class="hero-cta">
+    <a href="https://discord.gg/aXDmYe5Zg3" target="_blank" rel="noopener noreferrer" class="hero-cta">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
         <circle cx="9" cy="20" r="1.5"/>
         <circle cx="18" cy="20" r="1.5"/>
         <path d="M2 3h3l2.4 12.4a2 2 0 002 1.6h9.6a2 2 0 002-1.6L22 7H6"/>
       </svg>
-      Получить доступ
+      <span class="hero-cta-text">Получить доступ</span>
     </a>
     <div class="hero-command">команда VLG</div>
-  </section>
+  </div>
+</section>
 
-  <section id="creators">
-    <h2 class="section-title">Создатели проекта</h2>
-    <div class="section-sub">Команда</div>
-    <div class="creators">
-      <div class="creator">
-        <div class="creator-role">Owner</div>
-        <div class="creator-name">#HAPPY exulansis</div>
-        <div class="creator-tag">@eatfame</div>
-        <div class="creator-status">Не в сети</div>
+<!-- ========== CREATORS ========== -->
+<section class="section" id="creators">
+  <div class="creators-wrap">
+    <div class="creators-bg">
+      <img src="vlg.png" alt="bg" onerror="this.style.display='none'">
+    </div>
+    <div class="creators-content">
+      <div class="creators-head">
+        <div class="creators-badge">
+          <span class="creators-badge-label">команда</span>
+          <strong>VLG</strong>
+        </div>
+        <h2 class="creators-title" id="creatorsTitle">Создатели проекта</h2>
       </div>
-      <div class="creator">
-        <div class="creator-role">Co. Owner</div>
-        <div class="creator-name">Faraonov</div>
-        <div class="creator-tag">@dev_faraonov</div>
-        <div class="creator-status mobile">Не активен</div>
+      <div class="creators-grid">
+        <div class="creator-card">
+          <div class="creator-role-head">
+            <div class="creator-role-icon">👑</div>
+            <div class="creator-role-title">Owner</div>
+          </div>
+          <div class="creator-island" data-user-id="">
+            <div class="creator-row">
+              <div class="creator-avatar">
+                <div class="fallback">O</div>
+                <span class="creator-status-dot offline"></span>
+              </div>
+              <div class="creator-info">
+                <div class="creator-info-name">
+                  <h4>Owner</h4>
+                  <button class="refresh-btn" title="Обновить">⟳</button>
+                </div>
+                <div class="creator-info-tag">@owner</div>
+                <div class="creator-badges">
+                  <span class="creator-badge-line">
+                    <span class="dot" style="background:#71717a"></span>
+                    <span class="creator-status-text">Не в сети</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <a class="creator-profile-btn" href="#" target="_blank" rel="noopener noreferrer">
+              <span>Перейти на профиль</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="creator-card">
+          <div class="creator-role-head">
+            <div class="creator-role-icon">🛡</div>
+            <div class="creator-role-title">Co. Owner</div>
+          </div>
+          <div class="creator-island" data-user-id="">
+            <div class="creator-row">
+              <div class="creator-avatar">
+                <div class="fallback">C</div>
+                <span class="creator-status-dot offline"></span>
+              </div>
+              <div class="creator-info">
+                <div class="creator-info-name">
+                  <h4>Co. Owner</h4>
+                  <button class="refresh-btn" title="Обновить">⟳</button>
+                </div>
+                <div class="creator-info-tag">@co-owner</div>
+                <div class="creator-badges">
+                  <span class="creator-badge-line">
+                    <span class="dot" style="background:#71717a"></span>
+                    <span class="creator-status-text">Не в сети</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <a class="creator-profile-btn" href="#" target="_blank" rel="noopener noreferrer">
+              <span>Перейти на профиль</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="faq">
-    <h2 class="section-title">Часто задаваемые вопросы</h2>
-    <div class="section-sub">Вопрос — Ответ</div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <div class="faq-num">#01</div>
-        <div class="faq-q">Почему VLG?</div>
-        <div class="faq-a">Потому что наш функционал не стоит на месте и постоянно развивается в лучшую сторону.</div>
-        <div class="faq-by">VLG Hub</div>
+<!-- ========== FAQ ========== -->
+<section class="section" id="faq">
+  <div class="section-head">
+    <div class="section-badge">❓ <span id="faqBadgeLabel">Вопрос — Ответ</span></div>
+    <h2 class="section-title" id="faqTitle">Часто задаваемые вопросы</h2>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-card">
+      <div>
+        <div class="faq-head">
+          <div class="faq-icon">⚡</div>
+          <span class="faq-num">#01</span>
+        </div>
+        <h3 class="faq-q" data-ru="Почему VLG?" data-en="Why VLG?">Почему VLG?</h3>
+        <div class="faq-divider"></div>
+        <p class="faq-a" data-ru="Потому что наш функционал не стоит на месте и постоянно развивается в лучшую сторону." data-en="Because our functionality never stands still and is constantly evolving for the best experience.">Потому что наш функционал не стоит на месте и постоянно развивается в лучшую сторону.</p>
       </div>
-      <div class="faq-item">
-        <div class="faq-num">#02</div>
-        <div class="faq-q">Фризит ли игра с вашим скриптом?</div>
-        <div class="faq-a">Нет, скрипт полностью оптимизирован и пролагов быть не должно.</div>
-        <div class="faq-by">VLG Hub</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-num">#03</div>
-        <div class="faq-q">Часто ли выходят обновления?</div>
-        <div class="faq-a">Мы стараемся делать обновления как можно быстрее — с новыми функциями, фиксами багов и улучшениями.</div>
-        <div class="faq-by">VLG Hub</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-num">#04</div>
-        <div class="faq-q">Есть ли у вас поддержка чтобы можно было задавать вопросы?</div>
-        <div class="faq-a">Да, поддержка работает 24/7 в нашем дискорд сервере.</div>
-        <div class="faq-by">VLG Hub</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-num">#05</div>
-        <div class="faq-q">Могу ли я лично попросить вас добавить функцию в скрипт, или пожаловаться на баг?</div>
-        <div class="faq-a">Да, все так же в нашем дискорд сервере все это предусмотрено.</div>
-        <div class="faq-by">VLG Hub</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-num">#06</div>
-        <div class="faq-q">Где вас найти?</div>
-        <div class="faq-a">В нашем официальном Discord сервере — пролистайте ниже, чтобы присоединиться.</div>
-        <div class="faq-by">VLG Hub</div>
-      </div>
+      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
     </div>
-  </section>
 
-  <section id="discord">
-    <h2 class="section-title">Наш Discord сервер</h2>
-    <div class="section-sub">Официальное сообщество</div>
+    <div class="faq-card">
+      <div>
+        <div class="faq-head">
+          <div class="faq-icon">🖥</div>
+          <span class="faq-num">#02</span>
+        </div>
+        <h3 class="faq-q" data-ru="Фризит ли игра с вашим скриптом?" data-en="Does the game freeze with your script?">Фризит ли игра с вашим скриптом?</h3>
+        <div class="faq-divider"></div>
+        <p class="faq-a" data-ru="Нет, скрипт полностью оптимизирован и пролагов быть не должно." data-en="No, the script is thoroughly optimized so there will be no lag or performance drops.">Нет, скрипт полностью оптимизирован и пролагов быть не должно.</p>
+      </div>
+      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
+    </div>
+
+    <div class="faq-card">
+      <div>
+        <div class="faq-head">
+          <div class="faq-icon">🔄</div>
+          <span class="faq-num">#03</span>
+        </div>
+        <h3 class="faq-q" data-ru="Часто ли выходят обновления?" data-en="Do updates release often?">Часто ли выходят обновления?</h3>
+        <div class="faq-divider"></div>
+        <p class="faq-a" data-ru="Мы стараемся делать обновления как можно быстрее — с новыми функциями, фиксами багов и улучшениями." data-en="We release updates promptly with new features, bug fixes, and continuous improvements.">Мы стараемся делать обновления как можно быстрее — с новыми функциями, фиксами багов и улучшениями.</p>
+      </div>
+      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
+    </div>
+
+    <div class="faq-card">
+      <div>
+        <div class="faq-head">
+          <div class="faq-icon">💬</div>
+          <span class="faq-num">#04</span>
+        </div>
+        <h3 class="faq-q" data-ru="Есть ли у вас поддержка чтобы можно было задавать вопросы?" data-en="Do you have support to ask questions?">Есть ли у вас поддержка чтобы можно было задавать вопросы?</h3>
+        <div class="faq-divider"></div>
+        <p class="faq-a" data-ru="Да, поддержка работает 24/7 в нашем дискорд сервере." data-en="Yes, our dedicated support operates 24/7 in our Discord server.">Да, поддержка работает 24/7 в нашем дискорд сервере.</p>
+      </div>
+      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
+    </div>
+
+    <div class="faq-card">
+      <div>
+        <div class="faq-head">
+          <div class="faq-icon">✨</div>
+          <span class="faq-num">#05</span>
+        </div>
+        <h3 class="faq-q" data-ru="Могу ли я лично попросить вас добавить функцию в скрипт, или пожаловаться на баг?" data-en="Can I personally request a feature or report a bug?">Могу ли я лично попросить вас добавить функцию в скрипт, или пожаловаться на баг?</h3>
+        <div class="faq-divider"></div>
+        <p class="faq-a" data-ru="Да, все так же в нашем дискорд сервере все это предусмотрено." data-en="Yes, our Discord server has dedicated channels specifically for this.">Да, все так же в нашем дискорд сервере все это предусмотрено.</p>
+      </div>
+      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
+    </div>
+
+    <div class="faq-card">
+      <div>
+        <div class="faq-head">
+          <div class="faq-icon">🧭</div>
+          <span class="faq-num">#06</span>
+        </div>
+        <h3 class="faq-q" data-ru="Где вас найти?" data-en="Where can you find us?">Где вас найти?</h3>
+        <div class="faq-divider"></div>
+        <p class="faq-a" data-ru="В нашем официальном Discord сервере — пролистайте ниже, чтобы присоединиться." data-en="In our official Discord server — scroll down below to join our community.">В нашем официальном Discord сервере — пролистайте ниже, чтобы присоединиться.</p>
+      </div>
+      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DISCORD ========== -->
+<section class="section" id="discord">
+  <div class="section-head">
+    <div class="section-badge">✨ <span id="discordBadgeLabel">Официальное сообщество</span></div>
+    <h2 class="section-title" id="discordTitle">Наш Discord сервер</h2>
+  </div>
+  <div class="discord-wrap">
     <div class="discord-card">
       <div class="discord-banner">
-        <div class="discord-status">Активен 24/7</div>
+        <img src="vlg.png" alt="banner" onerror="this.style.display='none'">
       </div>
-      <div class="discord-content">
-        <div class="discord-avatar"><span>VLG</span></div>
+      <div class="discord-body">
+        <div class="discord-head">
+          <div class="discord-logo">
+            <img src="vlg.png" alt="VLG" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;background:linear-gradient(135deg,#5c0030,#1a1220);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#ff9fc4;font-family:Cinzel,serif;font-weight:900;font-size:24px&quot;>V</div>'">
+          </div>
+          <div class="discord-live">
+            <span class="dot"></span>
+            <span class="discord-live-text">Активен 24/7</span>
+          </div>
+        </div>
         <div class="discord-title">
           <h3>VLG</h3>
-          <span class="discord-badge">✓</span>
+          <div class="discord-verified">✓</div>
         </div>
-        <p class="discord-desc">Официальный хаб проекта: обновления, скрипты, поддержка и новости.</p>
+        <p class="discord-desc" id="discordDesc">Официальный хаб проекта: обновления, скрипты, поддержка и новости.</p>
         <div class="discord-tags">
-          <span class="tag pink">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff69b4"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg>
+          <span class="discord-tag pink">
+            <svg viewBox="0 0 24 24" fill="#ff9fc4"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg>
             ROBLOX
           </span>
-          <span class="tag">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d0c0d8" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
+          <span class="discord-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#d0c0d8" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
             Дек. 2025
           </span>
-          <span class="tag pink">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/></svg>
+          <span class="discord-tag pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ff9fc4" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/></svg>
             Проверен
           </span>
         </div>
-        <a href="#" class="discord-btn">
+        <a href="https://discord.gg/aXDmYe5Zg3" target="_blank" rel="noopener noreferrer" class="discord-btn">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M20.3 4.4A19.7 19.7 0 0016 3l-.2.4a14.7 14.7 0 013.6 1.9A14 14 0 004 5.3a14.7 14.7 0 013.6-1.9L7.4 3A19.7 19.7 0 003.1 4.4C.5 8.1-.3 11.7.1 15.2a19.8 19.8 0 006 3l1.2-1.9a12.9 12.9 0 01-2-.9l.5-.4a14.1 14.1 0 0012 0l.5.4a12.9 12.9 0 01-2 .9l1.2 1.9a19.8 19.8 0 006-3c.5-4.1-.8-7.7-3.2-10.8zM8 13.5c-1.2 0-2.2-1-2.2-2.3S6.8 8.9 8 8.9s2.2 1 2.2 2.3-.9 2.3-2.2 2.3zm8 0c-1.2 0-2.2-1-2.2-2.3s1-2.3 2.2-2.3 2.2 1 2.2 2.3-1 2.3-2.2 2.3z"/></svg>
-          Присоединиться к серверу
+          <span id="discordJoinText">Присоединиться к серверу</span>
         </a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="tariff">
-    <h2 class="section-title">Получить доступ</h2>
-    <div class="section-sub">Тариф и приобретение</div>
-    <div class="tariff">
-      <div class="tariff-name">VLG Premium</div>
-      <div class="tariff-price">от 550<span> ₽</span></div>
-      <div class="tariff-desc">Полный доступ к эксплойту + обновления + поддержка</div>
+<!-- ========== TARIFF ========== -->
+<section class="section" id="tariff">
+  <div class="section-head">
+    <div class="section-badge">⚡ <span id="tariffBadgeLabel">Тариф и приобретение</span></div>
+    <h2 class="section-title" id="tariffTitle">Получить доступ</h2>
+  </div>
+  <div class="tariff-wrap">
+    <div class="tariff-card">
+      <div class="tariff-head">
+        <h3 class="tariff-name">VLG Premium</h3>
+        <div class="tariff-price" id="tariffPrice">от 550₽</div>
+        <p class="tariff-desc" id="tariffDesc">Полный доступ к эксплойту + обновления + поддержка</p>
+      </div>
+      <div class="tariff-divider"></div>
       <ul class="tariff-features">
-        <li>Полный доступ ко всем функциям скрипта</li>
-        <li>Регулярные и оперативные обновления</li>
-        <li>Круглосуточная поддержка 24/7 в Discord</li>
-        <li>Быстрая выдача и помощь с настройкой</li>
+        <li><span class="tick">✓</span><span data-ru="Полный доступ ко всем функциям скрипта" data-en="Full access to all script features">Полный доступ ко всем функциям скрипта</span></li>
+        <li><span class="tick">✓</span><span data-ru="Регулярные и оперативные обновления" data-en="Regular and prompt script updates">Регулярные и оперативные обновления</span></li>
+        <li><span class="tick">✓</span><span data-ru="Круглосуточная поддержка 24/7 в Discord" data-en="24/7 dedicated Discord support">Круглосуточная поддержка 24/7 в Discord</span></li>
+        <li><span class="tick">✓</span><span data-ru="Быстрая выдача и помощь с настройкой" data-en="Fast delivery & setup assistance">Быстрая выдача и помощь с настройкой</span></li>
       </ul>
-      <button class="tariff-btn">Получить доступ</button>
+      <a href="https://discord.gg/aXDmYe5Zg3" target="_blank" rel="noopener noreferrer" class="tariff-btn">
+        <svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M20.3 4.4A19.7 19.7 0 0016 3l-.2.4a14.7 14.7 0 013.6 1.9A14 14 0 004 5.3a14.7 14.7 0 013.6-1.9L7.4 3A19.7 19.7 0 003.1 4.4C.5 8.1-.3 11.7.1 15.2a19.8 19.8 0 006 3l1.2-1.9a12.9 12.9 0 01-2-.9l.5-.4a14.1 14.1 0 0012 0l.5.4a12.9 12.9 0 01-2 .9l1.2 1.9a19.8 19.8 0 006-3c.5-4.1-.8-7.7-3.2-10.8zM8 13.5c-1.2 0-2.2-1-2.2-2.3S6.8 8.9 8 8.9s2.2 1 2.2 2.3-.9 2.3-2.2 2.3zm8 0c-1.2 0-2.2-1-2.2-2.3s1-2.3 2.2-2.3 2.2 1 2.2 2.3-1 2.3-2.2 2.3z"/></svg>
+        <span id="tariffBtnText">Перейти в Discord</span>
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer>© 2025 VLG. Все права защищены.</footer>
-</div>
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <strong>VLG</strong>
+    <span class="sep">•</span>
+    <span>Strong FTAP Script</span>
+    <span class="sep">•</span>
+    <span>2026</span>
+  </div>
+</footer>
 
 <script>
-  function randomRayId() {
-    const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let s = '';
-    for (let i = 0; i < 14; i++) s += c[Math.floor(Math.random() * c.length)];
-    return s;
-  }
-  document.getElementById('rayId').textContent = randomRayId();
+/* ==========================================================
+   RAY ID — генерация случайного Cloudflare-подобного id
+========================================================== */
+function genRayId() {
+  const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let s = '';
+  for (let i = 0; i < 14; i++) s += c[Math.floor(Math.random() * c.length)];
+  return s;
+}
+document.getElementById('rayId').textContent = genRayId();
 
-  const checkBox = document.getElementById('checkBox');
-  const checkText = document.getElementById('checkText');
-  const checkScreen = document.getElementById('checkScreen');
-  const siteScreen = document.getElementById('siteScreen');
-  const progressWrap = document.getElementById('progressWrap');
-  const progressFill = document.getElementById('progressFill');
-  const progressPct = document.getElementById('progressPct');
-  const progressLabel = document.getElementById('progressLabel');
-
+/* ==========================================================
+   CHECK SCREEN — проверка "я человек"
+========================================================== */
+(function () {
+  const box = document.getElementById('checkBox');
+  const text = document.getElementById('checkText');
+  const progWrap = document.getElementById('checkProgress');
+  const progFill = document.getElementById('checkProgressFill');
+  const progText = document.getElementById('checkProgressText');
+  const progPct = document.getElementById('checkProgressPct');
+  const screen = document.getElementById('checkScreen');
   let busy = false;
-  checkBox.addEventListener('click', () => {
+
+  box.addEventListener('click', function () {
     if (busy) return;
     busy = true;
-    checkBox.classList.add('loading');
-    checkText.textContent = 'Проверяем...';
-    progressWrap.classList.add('visible');
+    box.classList.add('loading');
+    text.textContent = 'Проверка...';
+    progWrap.classList.add('show');
 
+    let pct = 0;
     const stages = [
-      { pct: 25, label: 'Анализ браузера...' },
-      { pct: 50, label: 'Проверка отпечатка...' },
-      { pct: 75, label: 'Верификация сессии...' },
-      { pct: 100, label: 'Успешно подтверждено' }
+      { at: 25, label: 'Анализ браузера...' },
+      { at: 50, label: 'Проверка отпечатка...' },
+      { at: 75, label: 'Верификация сессии...' },
+      { at: 100, label: 'Успешно подтверждено' }
     ];
-    let i = 0;
-    const tick = setInterval(() => {
-      if (i >= stages.length) { clearInterval(tick); return; }
-      progressFill.style.width = stages[i].pct + '%';
-      progressPct.textContent = stages[i].pct + '%';
-      if (i === stages.length - 1) {
-        progressLabel.textContent = stages[i].label;
-        checkBox.classList.remove('loading');
-        checkBox.classList.add('done');
-        checkText.textContent = 'Успешно подтверждено';
-        setTimeout(() => {
-          checkScreen.classList.add('fade-out');
-          siteScreen.classList.add('visible');
-          spawnPetals();
-          setTimeout(() => { checkScreen.style.display = 'none'; }, 500);
-        }, 700);
+    let stageIdx = 0;
+
+    const timer = setInterval(function () {
+      pct += Math.floor(Math.random() * 12) + 8;
+      if (pct >= 100) pct = 100;
+      progFill.style.width = pct + '%';
+      progPct.textContent = pct + '%';
+
+      if (stageIdx < stages.length && pct >= stages[stageIdx].at) {
+        progText.textContent = stages[stageIdx].label;
+        stageIdx++;
       }
-      i++;
-    }, 550);
+
+      if (pct >= 100) {
+        clearInterval(timer);
+        setTimeout(function () {
+          box.classList.remove('loading');
+          box.classList.add('done');
+          text.textContent = 'Успешно подтверждено';
+          setTimeout(function () {
+            screen.classList.add('fade-out');
+            setTimeout(function () {
+              screen.style.display = 'none';
+            }, 700);
+          }, 700);
+        }, 300);
+      }
+    }, 180);
   });
+})();
 
-  function spawnPetals() {
-    const chars = ['❀', '✿', '❁', '✾'];
-    setInterval(() => {
-      const p = document.createElement('div');
-      p.className = 'petal';
-      p.textContent = chars[Math.floor(Math.random() * chars.length)];
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.animationDuration = (8 + Math.random() * 8) + 's';
-      p.style.fontSize = (10 + Math.random() * 14) + 'px';
-      p.style.opacity = 0.3 + Math.random() * 0.5;
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 16000);
-    }, 600);
+/* ==========================================================
+   NAVBAR — typed "VLG" + scroll effect
+========================================================== */
+(function () {
+  const target = 'VLG';
+  const el = document.getElementById('navTyped');
+  let idx = 0;
+  function type() {
+    if (idx <= target.length) {
+      el.textContent = target.substring(0, idx);
+      idx++;
+      setTimeout(type, 250);
+    } else {
+      setTimeout(() => { idx = 0; el.textContent = ''; type(); }, 5000);
+    }
   }
+  type();
 
-  // Эффект печатной машинки
-  function typeWriter() {
-    const el = document.getElementById('typedText');
-    if (!el) return;
-    const line1 = 'My revenge has just begun.';
-    const line2 = 'VLG';
-    let i = 0;
-    let phase = 0;
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 20) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+  });
+})();
 
-    function type() {
-      if (phase === 0) {
-        if (i <= line1.length) {
-          el.innerHTML = line1.substring(0, i);
-          i++;
-          setTimeout(type, 70);
-        } else {
-          phase = 1;
-          i = 0;
-          setTimeout(type, 400);
-        }
-      } else if (phase === 1) {
-        if (i <= line2.length) {
-          el.innerHTML = line1 + ' <span style="color:#ff5fae;margin:0 10px;">|</span> ' + line2.substring(0, i);
-          i++;
-          setTimeout(type, 130);
-        } else {
-          phase = 2;
-          setTimeout(type, 2800);
-        }
-      } else if (phase === 2) {
-        const full = line1 + ' <span style="color:#ff5fae;margin:0 10px;">|</span> ' + line2;
-        let eraseIdx = full.length;
-        const eraseTick = () => {
-          if (eraseIdx > 0) {
-            el.innerHTML = full.substring(0, eraseIdx);
-            eraseIdx -= 2;
-            setTimeout(eraseTick, 25);
-          } else {
-            i = 0;
-            phase = 0;
-            setTimeout(type, 500);
-          }
-        };
-        eraseTick();
+/* ==========================================================
+   SCROLL TO SECTION
+========================================================== */
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  }
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+/* ==========================================================
+   HERO — typewriter "My revenge has just begun. | VLG"
+========================================================== */
+(function () {
+  const text = 'My revenge has just begun. | VLG';
+  const el = document.getElementById('heroTyped');
+  let i = 0;
+  let phase = 0; // 0 = печатаем, 1 = пауза, 2 = стираем
+
+  function tick() {
+    if (phase === 0) {
+      if (i <= text.length) {
+        el.textContent = text.substring(0, i);
+        i++;
+        setTimeout(tick, 70);
+      } else {
+        phase = 1;
+        setTimeout(tick, 3200);
+      }
+    } else if (phase === 1) {
+      phase = 2;
+      tick();
+    } else {
+      if (i > 0) {
+        i--;
+        el.textContent = text.substring(0, i);
+        setTimeout(tick, 25);
+      } else {
+        phase = 0;
+        setTimeout(tick, 500);
       }
     }
-    type();
   }
-  typeWriter();
+  tick();
+})();
+
+/* ==========================================================
+   FAQ + FULL PAGE — билингва RU/EN
+========================================================== */
+let currentLang = 'ru';
+function toggleLang() {
+  currentLang = currentLang === 'ru' ? 'en' : 'ru';
+  document.getElementById('langLabel').textContent = currentLang.toUpperCase();
+
+  const ru = currentLang === 'ru';
+  document.getElementById('checkSub').textContent = ru
+    ? 'Проверка безопасности перед входом на сайт'
+    : 'Security check before entering the website';
+  document.getElementById('checkText').textContent = ru
+    ? 'Я человек (не робот)'
+    : 'I am a human (not a robot)';
+  document.querySelectorAll('.nav-m-creators').forEach(e => e.textContent = ru ? 'Команда' : 'Team');
+  document.querySelectorAll('.nav-m-faq').forEach(e => e.textContent = ru ? 'FAQ' : 'FAQ');
+  document.querySelectorAll('.nav-m-discord').forEach(e => e.textContent = ru ? 'Дискорд' : 'Discord');
+  document.querySelectorAll('.nav-m-cta').forEach(e => e.textContent = ru ? 'Получить доступ' : 'Get Access');
+  document.getElementById('navCtaBtn').textContent = ru ? 'Получить доступ' : 'Get Access';
+  document.querySelector('.hero-cta-text').textContent = ru ? 'Получить доступ' : 'Get Access';
+  document.getElementById('creatorsTitle').textContent = ru ? 'Создатели проекта' : 'Project Creators';
+  document.querySelector('.creators-badge-label').textContent = ru ? 'команда' : 'team';
+  document.getElementById('faqBadgeLabel').textContent = ru ? 'Вопрос — Ответ' : 'FAQ';
+  document.getElementById('faqTitle').textContent = ru ? 'Часто задаваемые вопросы' : 'Frequently Asked Questions';
+  document.getElementById('discordBadgeLabel').textContent = ru ? 'Официальное сообщество' : 'Official Community';
+  document.getElementById('discordTitle').textContent = ru ? 'Наш Discord сервер' : 'Our Discord Server';
+  document.getElementById('discordDesc').textContent = ru
+    ? 'Официальный хаб проекта: обновления, скрипты, поддержка и новости.'
+    : 'Official project hub: updates, scripts, 24/7 support and community.';
+  document.getElementById('discordJoinText').textContent = ru ? 'Присоединиться к серверу' : 'Join Discord Server';
+  document.getElementById('tariffBadgeLabel').textContent = ru ? 'Тариф и приобретение' : 'Pricing & Access';
+  document.getElementById('tariffTitle').textContent = ru ? 'Получить доступ' : 'Get Access';
+  document.getElementById('tariffPrice').textContent = ru ? 'от 550₽' : 'from $5.5';
+  document.getElementById('tariffDesc').textContent = ru
+    ? 'Полный доступ к эксплойту + обновления + поддержка'
+    : 'Full exploit access + all updates + 24/7 support';
+  document.getElementById('tariffBtnText').textContent = ru ? 'Перейти в Discord' : 'Join Discord to Buy';
+  document.querySelectorAll('[data-ru][data-en]').forEach(el => {
+    el.textContent = ru ? el.dataset.ru : el.dataset.en;
+  });
+  document.querySelector('.discord-live-text').textContent = ru ? 'Активен 24/7' : 'Active 24/7';
+}
+
+/* ==========================================================
+   FLOWER CANVAS — падающие лепестки сакуры
+========================================================== */
+(function () {
+  const canvas = document.getElementById('flowerCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  let flowers = [];
+  const isMobile = window.innerWidth < 768;
+  const COUNT = isMobile ? 16 : 36;
+
+  const colors = [
+    'rgba(255, 105, 180, 0.75)',
+    'rgba(255, 145, 195, 0.85)',
+    'rgba(230, 0, 119, 0.65)',
+    'rgba(255, 160, 200, 0.8)',
+    'rgba(200, 20, 100, 0.6)'
+  ];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__resizeT);
+    window.__resizeT = setTimeout(resize, 150);
+  });
+
+  for (let i = 0; i < COUNT; i++) {
+    flowers.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: Math.random() * 3.5 + 3,
+      speedX: Math.random() * 0.7 - 0.2,
+      speedY: Math.random() * 0.9 + 0.5,
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 1,
+      flip: Math.random() * Math.PI,
+      flipSpeed: Math.random() * 0.02 + 0.01,
+      opacity: Math.random() * 0.4 + 0.4,
+      color: colors[i % colors.length]
+    });
+  }
+
+  function drawFlower(f) {
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.rotation * Math.PI / 180);
+    ctx.scale(1, Math.sin(f.flip));
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(f.size / 2, -f.size / 2, f.size, -f.size / 4, f.size, f.size / 2);
+    ctx.bezierCurveTo(f.size, f.size, f.size / 2, f.size * 1.2, 0, f.size);
+    ctx.bezierCurveTo(-f.size / 2, f.size * 1.2, -f.size, f.size, -f.size, f.size / 2);
+    ctx.bezierCurveTo(-f.size, -f.size / 4, -f.size / 2, -f.size / 2, 0, 0);
+    ctx.closePath();
+    ctx.fillStyle = f.color;
+    ctx.globalAlpha = f.opacity;
+    if (!isMobile) {
+      ctx.shadowColor = 'rgba(255, 63, 142, 0.4)';
+      ctx.shadowBlur = 3;
+    }
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < flowers.length; i++) {
+      const f = flowers[i];
+      f.x += f.speedX + Math.sin(f.y * 0.004) * 0.35;
+      f.y += f.speedY;
+      f.rotation += f.rotationSpeed;
+      f.flip += f.flipSpeed;
+      if (f.y > h + 15) { f.y = -15; f.x = Math.random() * w; }
+      if (f.x > w + 15) f.x = -15;
+      else if (f.x < -15) f.x = w + 15;
+      drawFlower(f);
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) loop();
+  });
+})();
+
+/* ==========================================================
+   LANYARD API — живые статусы создателей
+   Замени user-id на реальные Discord ID владельцев.
+========================================================== */
+(function () {
+  // 👇 ВСТАВЬ СЮДА Discord ID владельца и со-владельца
+  const OWNER_ID = ''; // например '1175477012970885251'
+  const CO_OWNER_ID = ''; // например '1406731212919144469'
+
+  const statusMap = {
+    online: { text: { ru: 'В сети', en: 'Online' }, cls: 'online' },
+    idle: { text: { ru: 'Не активен', en: 'Idle' }, cls: 'idle' },
+    dnd: { text: { ru: 'Не беспокоить', en: 'Do Not Disturb' }, cls: 'dnd' },
+    offline: { text: { ru: 'Не в сети', en: 'Offline' }, cls: 'offline' }
+  };
+
+  async function fetchLanyard(userId, island) {
+    if (!userId) return;
+    try {
+      const res = await fetch('https://api.lanyard.rest/v1/users/' + userId);
+      if (!res.ok) return;
+      const json = await res.json();
+      if (!json.success || !json.data) return;
+      const d = json.data;
+      const st = d.discord_status || 'offline';
+      const info = statusMap[st] || statusMap.offline;
+
+      // имя и тег
+      const displayName = d.discord_user.global_name || d.discord_user.username || 'Unknown';
+      const tag = '@' + (d.discord_user.username || 'unknown');
+      island.querySelector('.creator-info-name h4').textContent = displayName;
+      island.querySelector('.creator-info-tag').textContent = tag;
+
+      // статус-точка
+      const dot = island.querySelector('.creator-status-dot');
+      dot.className = 'creator-status-dot ' + info.cls;
+
+      // текстовый статус
+      const stText = island.querySelector('.creator-status-text');
+      if (stText) {
+        stText.textContent = currentLang === 'ru' ? info.text.ru : info.text.en;
+        stText.previousElementSibling.style.background =
+          st === 'online' ? '#10b981' :
+          st === 'idle' ? '#f59e0b' :
+          st === 'dnd' ? '#f43f5e' : '#71717a';
+      }
+
+      // аватар
+      if (d.discord_user.avatar) {
+        const url = 'https://cdn.discordapp.com/avatars/' + userId + '/' + d.discord_user.avatar + '.png?size=128';
+        const av = island.querySelector('.creator-avatar');
+        const oldImg = av.querySelector('img');
+        if (oldImg) oldImg.remove();
+        const img = document.createElement('img');
+        img.src = url;
+        img.referrerPolicy = 'no-referrer';
+        img.onerror = function () { this.remove(); };
+        av.insertBefore(img, av.firstChild);
+      }
+
+      // кастомный статус
+      let customEl = island.querySelector('.creator-custom-status');
+      if (d.custom_status && d.custom_status.text) {
+        if (!customEl) {
+          customEl = document.createElement('div');
+          customEl.className = 'creator-custom-status';
+          customEl.innerHTML = '<span class="radio">📡</span><span class="cs-text"></span>';
+          island.querySelector('.creator-info').appendChild(customEl);
+        }
+        customEl.querySelector('.cs-text').textContent = '"' + d.custom_status.text + '"';
+      }
+
+      // игра
+      let actEl = island.querySelector('.creator-activity');
+      const game = d.activities && d.activities.find(a => a.name !== 'Custom Status');
+      if (game) {
+        if (!actEl) {
+          actEl = document.createElement('div');
+          actEl.className = 'creator-activity';
+          actEl.innerHTML = '<span>🎮</span><span class="game-text"></span>';
+          island.querySelector('.creator-info').appendChild(actEl);
+        }
+        actEl.querySelector('.game-text').textContent =
+          (currentLang === 'ru' ? 'Играет в: ' : 'Playing: ') + game.name;
+      }
+
+      // профиль
+      const btn = island.querySelector('.creator-profile-btn');
+      if (btn) btn.href = 'https://discord.com/users/' + userId;
+    } catch (e) {
+      // тихо
+    }
+  }
+
+  function refreshAll() {
+    const cards = document.querySelectorAll('.creator-island');
+    if (cards[0]) fetchLanyard(OWNER_ID, cards[0]);
+    if (cards[1]) fetchLanyard(CO_OWNER_ID, cards[1]);
+  }
+
+  refreshAll();
+  setInterval(refreshAll, 30000);
+
+  // ручное обновление
+  document.querySelectorAll('.refresh-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      const cards = document.querySelectorAll('.creator-island');
+      const uid = i === 0 ? OWNER_ID : CO_OWNER_ID;
+      fetchLanyard(uid, cards[i]);
+    });
+  });
+})();
 </script>
 
 </body>
