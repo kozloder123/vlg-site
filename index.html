@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>VLG — FTAP Script</title>
-<link rel="icon" type="image/png" href="vlg.png" />
-<link rel="apple-touch-icon" href="vlg.png" />
+<link rel="icon" type="image/png" href="https://i.pinimg.com/736x/7d/a0/01/7da00129b8c8e62ecefd6c5cbaa80a9e.jpg" />
+<link rel="apple-touch-icon" href="https://i.pinimg.com/736x/7d/a0/01/7da00129b8c8e62ecefd6c5cbaa80a9e.jpg" />
 <meta name="description" content="Strong FTAP script with rich functionality. Official website and community." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -430,8 +430,7 @@
     letter-spacing:2px;color:#f5e6ee;
     text-shadow:0 0 22px rgba(255,63,142,0.6);
   }
-  .creators-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
-  @media(max-width:768px){.creators-grid{grid-template-columns:1fr;gap:20px}}
+  .creators-grid{display:grid;grid-template-columns:1fr;gap:32px;max-width:520px;margin:0 auto}
 
   .creator-card{display:flex;flex-direction:column;align-items:center;width:100%}
   .creator-role-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
@@ -517,13 +516,6 @@
     font-size:10.5px;font-weight:600;color:#d0b8c8;
   }
   .creator-badge-line .dot{width:6px;height:6px;border-radius:50%}
-  .creator-badge-mobile{
-    display:inline-flex;align-items:center;
-    padding:3px 8px;border-radius:9999px;
-    background:rgba(20,15,26,0.9);
-    border:1px solid #2a2030;
-    font-size:9.5px;color:#a888a0;
-  }
   .creator-custom-status{
     margin-top:12px;padding:8px 12px;
     border-radius:10px;
@@ -831,7 +823,6 @@
     .navbar-inner{padding:0 16px}
     .section{padding:60px 16px}
     .creators-wrap{padding:26px 20px}
-    .creators-grid{gap:24px}
     .faq-card{padding:22px}
     .hero{padding:100px 16px 60px}
   }
@@ -854,8 +845,7 @@
   <div class="check-card">
     <div class="check-header">
       <div class="check-logo">
-        <img src="vlg.png" alt="VLG" onerror="this.style.display='none';this.parentElement.querySelector('.fallback').style.display='flex'">
-        <div class="fallback" style="display:none;font-family:'Cinzel',serif;font-weight:900;font-size:22px;color:#ff9fc4;background:linear-gradient(135deg,#5c0030,#1a1220);width:100%;height:100%;border-radius:15px;align-items:center;justify-content:center">V</div>
+        <img src="https://i.pinimg.com/736x/70/f9/50/70f950395ff9f4588d588f03752d5870.jpg" alt="VLG">
         <div class="check-logo-badge">🔒</div>
       </div>
       <h2 class="check-title">VLG</h2>
@@ -903,7 +893,7 @@
   <div class="navbar-inner">
     <div class="nav-brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
       <div class="nav-logo">
-        <img src="vlg.png" alt="VLG" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#ff3f8e,#5c0030)'">
+        <img src="https://i.pinimg.com/736x/70/f9/50/70f950395ff9f4588d588f03752d5870.jpg" alt="VLG">
       </div>
       <div class="nav-name">
         <span id="navTyped"></span><span class="nav-cursor"></span>
@@ -974,11 +964,10 @@
             <div class="creator-role-icon">👑</div>
             <div class="creator-role-title">Owner</div>
           </div>
-          <div class="creator-island" data-user-id="">
+          <div class="creator-island" data-user-id="749986981269864599">
             <div class="creator-row">
               <div class="creator-avatar">
-                <div class="fallback">O</div>
-                <span class="creator-status-dot offline"></span>
+                <img src="https://i.pinimg.com/736x/70/f9/50/70f950395ff9f4588d588f03752d5870.jpg" alt="Owner" referrerPolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;border-radius:17px;">
               </div>
               <div class="creator-info">
                 <div class="creator-info-name">
@@ -994,39 +983,7 @@
                 </div>
               </div>
             </div>
-            <a class="creator-profile-btn" href="#" target="_blank" rel="noopener noreferrer">
-              <span>Перейти на профиль</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="creator-card">
-          <div class="creator-role-head">
-            <div class="creator-role-icon">🛡</div>
-            <div class="creator-role-title">Co. Owner</div>
-          </div>
-          <div class="creator-island" data-user-id="">
-            <div class="creator-row">
-              <div class="creator-avatar">
-                <div class="fallback">C</div>
-                <span class="creator-status-dot offline"></span>
-              </div>
-              <div class="creator-info">
-                <div class="creator-info-name">
-                  <h4>Co. Owner</h4>
-                  <button class="refresh-btn" title="Обновить">⟳</button>
-                </div>
-                <div class="creator-info-tag">@co-owner</div>
-                <div class="creator-badges">
-                  <span class="creator-badge-line">
-                    <span class="dot" style="background:#71717a"></span>
-                    <span class="creator-status-text">Не в сети</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <a class="creator-profile-btn" href="#" target="_blank" rel="noopener noreferrer">
+            <a class="creator-profile-btn" href="https://discord.com/users/749986981269864599" target="_blank" rel="noopener noreferrer">
               <span>Перейти на профиль</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
             </a>
@@ -1086,21 +1043,8 @@
     <div class="faq-card">
       <div>
         <div class="faq-head">
-          <div class="faq-icon">💬</div>
-          <span class="faq-num">#04</span>
-        </div>
-        <h3 class="faq-q" data-ru="Есть ли у вас поддержка чтобы можно было задавать вопросы?" data-en="Do you have support to ask questions?">Есть ли у вас поддержка чтобы можно было задавать вопросы?</h3>
-        <div class="faq-divider"></div>
-        <p class="faq-a" data-ru="Да, поддержка работает 24/7 в нашем дискорд сервере." data-en="Yes, our dedicated support operates 24/7 in our Discord server.">Да, поддержка работает 24/7 в нашем дискорд сервере.</p>
-      </div>
-      <div class="faq-by"><span class="dot"></span><span>VLG Hub</span></div>
-    </div>
-
-    <div class="faq-card">
-      <div>
-        <div class="faq-head">
           <div class="faq-icon">✨</div>
-          <span class="faq-num">#05</span>
+          <span class="faq-num">#04</span>
         </div>
         <h3 class="faq-q" data-ru="Могу ли я лично попросить вас добавить функцию в скрипт, или пожаловаться на баг?" data-en="Can I personally request a feature or report a bug?">Могу ли я лично попросить вас добавить функцию в скрипт, или пожаловаться на баг?</h3>
         <div class="faq-divider"></div>
@@ -1113,7 +1057,7 @@
       <div>
         <div class="faq-head">
           <div class="faq-icon">🧭</div>
-          <span class="faq-num">#06</span>
+          <span class="faq-num">#05</span>
         </div>
         <h3 class="faq-q" data-ru="Где вас найти?" data-en="Where can you find us?">Где вас найти?</h3>
         <div class="faq-divider"></div>
@@ -1133,12 +1077,12 @@
   <div class="discord-wrap">
     <div class="discord-card">
       <div class="discord-banner">
-        <img src="vlg.png" alt="banner" onerror="this.style.display='none'">
+        <img src="https://i.pinimg.com/736x/7d/a0/01/7da00129b8c8e62ecefd6c5cbaa80a9e.jpg" alt="banner" onerror="this.style.display='none'">
       </div>
       <div class="discord-body">
         <div class="discord-head">
           <div class="discord-logo">
-            <img src="vlg.png" alt="VLG" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;background:linear-gradient(135deg,#5c0030,#1a1220);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#ff9fc4;font-family:Cinzel,serif;font-weight:900;font-size:24px&quot;>V</div>'">
+            <img src="https://i.pinimg.com/736x/70/f9/50/70f950395ff9f4588d588f03752d5870.jpg" alt="VLG">
           </div>
           <div class="discord-live">
             <span class="dot"></span>
@@ -1214,7 +1158,7 @@
 
 <script>
 /* ==========================================================
-   RAY ID — генерация случайного Cloudflare-подобного id
+   RAY ID
 ========================================================== */
 function genRayId() {
   const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -1225,7 +1169,7 @@ function genRayId() {
 document.getElementById('rayId').textContent = genRayId();
 
 /* ==========================================================
-   CHECK SCREEN — проверка "я человек"
+   CHECK SCREEN
 ========================================================== */
 (function () {
   const box = document.getElementById('checkBox');
@@ -1283,7 +1227,7 @@ document.getElementById('rayId').textContent = genRayId();
 })();
 
 /* ==========================================================
-   NAVBAR — typed "VLG" + scroll effect
+   NAVBAR
 ========================================================== */
 (function () {
   const target = 'VLG';
@@ -1324,13 +1268,13 @@ function toggleMenu() {
 }
 
 /* ==========================================================
-   HERO — typewriter "My VLG has just begun. | VLG"
+   HERO — typewriter "My VLG has just begun."
 ========================================================== */
 (function () {
-  const text = 'My VLG has just begun. | VLG';
+  const text = 'My VLG has just begun.';
   const el = document.getElementById('heroTyped');
   let i = 0;
-  let phase = 0; // 0 = печатаем, 1 = пауза, 2 = стираем
+  let phase = 0;
 
   function tick() {
     if (phase === 0) {
@@ -1360,7 +1304,7 @@ function toggleMenu() {
 })();
 
 /* ==========================================================
-   FAQ + FULL PAGE — билингва RU/EN
+   Билингва RU/EN
 ========================================================== */
 let currentLang = 'ru';
 function toggleLang() {
@@ -1392,7 +1336,7 @@ function toggleLang() {
   document.getElementById('discordJoinText').textContent = ru ? 'Присоединиться к серверу' : 'Join Discord Server';
   document.getElementById('tariffBadgeLabel').textContent = ru ? 'Тариф и приобретение' : 'Pricing & Access';
   document.getElementById('tariffTitle').textContent = ru ? 'Получить доступ' : 'Get Access';
-  document.getElementById('tariffPrice').textContent = ru ? 'от 550₽' : 'from $3.7';
+  document.getElementById('tariffPrice').textContent = ru ? 'от 359₽' : 'from $3.7';
   document.getElementById('tariffDesc').textContent = ru
     ? 'Полный доступ к эксплойту + обновления + поддержка'
     : 'Full exploit access + all updates + 24/7 support';
@@ -1404,7 +1348,7 @@ function toggleLang() {
 }
 
 /* ==========================================================
-   FLOWER CANVAS — падающие лепестки сакуры
+   FLOWER CANVAS
 ========================================================== */
 (function () {
   const canvas = document.getElementById('flowerCanvas');
@@ -1490,119 +1434,6 @@ function toggleLang() {
 
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) loop();
-  });
-})();
-
-/* ==========================================================
-   LANYARD API — живые статусы создателей
-   Замени user-id на реальные Discord ID владельцев.
-========================================================== */
-(function () {
-  // 👇 ВСТАВЬ СЮДА Discord ID владельца и со-владельца
-  const OWNER_ID = ''; // например '1175477012970885251'
-  const CO_OWNER_ID = ''; // например '1406731212919144469'
-
-  const statusMap = {
-    online: { text: { ru: 'В сети', en: 'Online' }, cls: 'online' },
-    idle: { text: { ru: 'Не активен', en: 'Idle' }, cls: 'idle' },
-    dnd: { text: { ru: 'Не беспокоить', en: 'Do Not Disturb' }, cls: 'dnd' },
-    offline: { text: { ru: 'Не в сети', en: 'Offline' }, cls: 'offline' }
-  };
-
-  async function fetchLanyard(userId, island) {
-    if (!userId) return;
-    try {
-      const res = await fetch('https://api.lanyard.rest/v1/users/' + userId);
-      if (!res.ok) return;
-      const json = await res.json();
-      if (!json.success || !json.data) return;
-      const d = json.data;
-      const st = d.discord_status || 'offline';
-      const info = statusMap[st] || statusMap.offline;
-
-      // имя и тег
-      const displayName = d.discord_user.global_name || d.discord_user.username || 'Unknown';
-      const tag = '@' + (d.discord_user.username || 'unknown');
-      island.querySelector('.creator-info-name h4').textContent = displayName;
-      island.querySelector('.creator-info-tag').textContent = tag;
-
-      // статус-точка
-      const dot = island.querySelector('.creator-status-dot');
-      dot.className = 'creator-status-dot ' + info.cls;
-
-      // текстовый статус
-      const stText = island.querySelector('.creator-status-text');
-      if (stText) {
-        stText.textContent = currentLang === 'ru' ? info.text.ru : info.text.en;
-        stText.previousElementSibling.style.background =
-          st === 'online' ? '#10b981' :
-          st === 'idle' ? '#f59e0b' :
-          st === 'dnd' ? '#f43f5e' : '#71717a';
-      }
-
-      // аватар
-      if (d.discord_user.avatar) {
-        const url = 'https://cdn.discordapp.com/avatars/' + userId + '/' + d.discord_user.avatar + '.png?size=128';
-        const av = island.querySelector('.creator-avatar');
-        const oldImg = av.querySelector('img');
-        if (oldImg) oldImg.remove();
-        const img = document.createElement('img');
-        img.src = url;
-        img.referrerPolicy = 'no-referrer';
-        img.onerror = function () { this.remove(); };
-        av.insertBefore(img, av.firstChild);
-      }
-
-      // кастомный статус
-      let customEl = island.querySelector('.creator-custom-status');
-      if (d.custom_status && d.custom_status.text) {
-        if (!customEl) {
-          customEl = document.createElement('div');
-          customEl.className = 'creator-custom-status';
-          customEl.innerHTML = '<span class="radio">📡</span><span class="cs-text"></span>';
-          island.querySelector('.creator-info').appendChild(customEl);
-        }
-        customEl.querySelector('.cs-text').textContent = '"' + d.custom_status.text + '"';
-      }
-
-      // игра
-      let actEl = island.querySelector('.creator-activity');
-      const game = d.activities && d.activities.find(a => a.name !== 'Custom Status');
-      if (game) {
-        if (!actEl) {
-          actEl = document.createElement('div');
-          actEl.className = 'creator-activity';
-          actEl.innerHTML = '<span>🎮</span><span class="game-text"></span>';
-          island.querySelector('.creator-info').appendChild(actEl);
-        }
-        actEl.querySelector('.game-text').textContent =
-          (currentLang === 'ru' ? 'Играет в: ' : 'Playing: ') + game.name;
-      }
-
-      // профиль
-      const btn = island.querySelector('.creator-profile-btn');
-      if (btn) btn.href = 'https://discord.com/users/' + userId;
-    } catch (e) {
-      // тихо
-    }
-  }
-
-  function refreshAll() {
-    const cards = document.querySelectorAll('.creator-island');
-    if (cards[0]) fetchLanyard(OWNER_ID, cards[0]);
-    if (cards[1]) fetchLanyard(CO_OWNER_ID, cards[1]);
-  }
-
-  refreshAll();
-  setInterval(refreshAll, 30000);
-
-  // ручное обновление
-  document.querySelectorAll('.refresh-btn').forEach((btn, i) => {
-    btn.addEventListener('click', () => {
-      const cards = document.querySelectorAll('.creator-island');
-      const uid = i === 0 ? OWNER_ID : CO_OWNER_ID;
-      fetchLanyard(uid, cards[i]);
-    });
   });
 })();
 </script>
