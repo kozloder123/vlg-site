@@ -297,8 +297,8 @@
   }
   .hero-bg img{
     width:100%;height:100%;object-fit:cover;object-position:center 35%;
-    filter:brightness(0.5) contrast(1.1) saturate(1.15);
-    opacity:0.55;
+    filter:brightness(0.65) contrast(1.05) saturate(1.1);
+    opacity:1;
   }
   .hero-bg::after{
     content:'';position:absolute;inset:0;
@@ -934,7 +934,7 @@
 <!-- ========== HERO ========== -->
 <section class="hero" id="hero-section">
   <div class="hero-bg">
-    <img src="vlg.png" alt="VLG" onerror="this.style.display='none'">
+    <img src="https://i.pinimg.com/736x/dc/ef/31/dcef31d14b75eb33ab317ae5f02b5e77.jpg" alt="bg">
   </div>
   <div class="hero-content">
     <h1 class="hero-title">VLG</h1>
@@ -1183,7 +1183,7 @@
     <div class="tariff-card">
       <div class="tariff-head">
         <h3 class="tariff-name">VLG Premium</h3>
-        <div class="tariff-price" id="tariffPrice">от 550₽</div>
+        <div class="tariff-price" id="tariffPrice">от 359₽</div>
         <p class="tariff-desc" id="tariffDesc">Полный доступ к эксплойту + обновления + поддержка</p>
       </div>
       <div class="tariff-divider"></div>
@@ -1324,10 +1324,10 @@ function toggleMenu() {
 }
 
 /* ==========================================================
-   HERO — typewriter "My revenge has just begun. | VLG"
+   HERO — typewriter "My VLG has just begun. | VLG"
 ========================================================== */
 (function () {
-  const text = 'My revenge has just begun. | VLG';
+  const text = 'My VLG has just begun. | VLG';
   const el = document.getElementById('heroTyped');
   let i = 0;
   let phase = 0; // 0 = печатаем, 1 = пауза, 2 = стираем
@@ -1392,7 +1392,7 @@ function toggleLang() {
   document.getElementById('discordJoinText').textContent = ru ? 'Присоединиться к серверу' : 'Join Discord Server';
   document.getElementById('tariffBadgeLabel').textContent = ru ? 'Тариф и приобретение' : 'Pricing & Access';
   document.getElementById('tariffTitle').textContent = ru ? 'Получить доступ' : 'Get Access';
-  document.getElementById('tariffPrice').textContent = ru ? 'от 550₽' : 'from $5.5';
+  document.getElementById('tariffPrice').textContent = ru ? 'от 550₽' : 'from $3.7';
   document.getElementById('tariffDesc').textContent = ru
     ? 'Полный доступ к эксплойту + обновления + поддержка'
     : 'Full exploit access + all updates + 24/7 support';
